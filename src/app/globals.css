@@ -1,26 +1,146 @@
 @import "tailwindcss";
 
+@theme {
+  --font-heading: var(--font-heading), system-ui, sans-serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-mono: var(--font-mono), monospace;
+
+  --color-canvas: #F4F2EB;
+  --color-canvas-light: #FAF8F2;
+  --color-canvas-subtle: #EBE8DF;
+  --color-ink: #141534;
+  --color-ink-muted: #585A74;
+  --color-lime: #D5DD54;
+  --color-lime-hover: #C5CD43;
+  --color-lavender: #A29EDB;
+  --color-lavender-subtle: #E9E7F7;
+  --color-slate-mark: #84818A;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F4F2EB;
+  --foreground: #141534;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F4F2EB;
+  color: #141534;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #D5DD54;
+  selection-color: #141534;
+}
+
+::selection {
+  background-color: #D5DD54;
+  color: #141534;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(20, 21, 52, 0.2);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #141534;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(20, 21, 52, 0.25) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 6px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(20, 21, 52, 0.25);
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #141534;
+}
+
+/* Tactile texture & dot patterns */
+.bg-canvas-pattern {
+  background-color: transparent;
+  background-image: 
+    radial-gradient(#141534 0.85px, transparent 0.85px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+  opacity: 0.12;
+}
+
+.bg-halftone-lavender {
+  background-image: radial-gradient(#A29EDB 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+}
+
+/* Highlighter box effect from reference image */
+.highlight-lime {
+  background-color: #D5DD54;
+  color: #141534;
+  padding: 0.12em 0.4em;
+  font-weight: 900;
+  display: inline-block;
+  letter-spacing: -0.02em;
+}
+
+/* Clean editorial cards */
+.editorial-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 21, 52, 0.1);
+  box-shadow: 0 4px 20px -2px rgba(20, 21, 52, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial-card:hover {
+  border-color: rgba(20, 21, 52, 0.3);
+  box-shadow: 0 12px 30px -4px rgba(20, 21, 52, 0.08);
+}
+
+/* Button styles */
+.btn-ink {
+  background-color: #141534;
+  color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.btn-ink:hover {
+  background-color: #21234F;
+  transform: translateY(-1px);
+}
+
+.btn-lime {
+  background-color: #D5DD54;
+  color: #141534;
+  font-weight: 800;
+  transition: all 0.2s ease;
+}
+
+.btn-lime:hover {
+  background-color: #C6CE43;
+  transform: translateY(-1px);
 }
