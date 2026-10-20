@@ -11,48 +11,48 @@ interface PlansSectionProps {
 
 export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
   return (
-    <section id="planes" className="relative py-20 md:py-28 bg-[#F4F2EB] overflow-hidden scroll-mt-20">
+    <section id="planes" className="relative py-10 sm:py-16 md:py-24 bg-[#F4F2EB] overflow-hidden scroll-mt-20">
       {/* Background dot matrix texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
 
       {/* Decorative Lavender Star (Top Right) */}
-      <div className="absolute top-10 right-6 sm:right-14 pointer-events-none opacity-80">
+      <div className="absolute top-6 right-3 sm:top-10 sm:right-14 pointer-events-none opacity-80 scale-75 sm:scale-100 origin-top-right">
         <LavenderStar size={80} />
       </div>
 
       {/* Decorative Slate Asterisk (Bottom Left) */}
-      <div className="absolute bottom-8 left-6 sm:left-12 pointer-events-none opacity-50">
+      <div className="absolute bottom-4 left-3 sm:bottom-8 sm:left-12 pointer-events-none opacity-50 scale-75 sm:scale-100 origin-bottom-left">
         <SlateAsterisk size={70} />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-xs tracking-wider uppercase mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-2 sm:mb-3">
             <Layers className="w-3.5 h-3.5" />
             <span>Planes y Servicios</span>
           </div>
 
-          <h2 className="font-heading text-3xl sm:text-4xl font-black text-[#141534] tracking-tight mb-3">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-black text-[#141534] tracking-tight mb-2 sm:mb-3">
             Elige lo que tu negocio necesita hoy.
           </h2>
 
-          <p className="text-sm sm:text-base text-[#585A74]">
+          <p className="text-xs sm:text-base text-[#585A74]">
             Precios claros según lo que quieras armar, sin mensualidades sorpresa ni letras chiquitas.
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-stretch">
+        {/* Pricing Cards: Mobile horizontal swipe, Desktop 4-col grid */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 sm:overflow-visible items-stretch custom-scrollbar">
           {DEVELOPMENT_PLANS.map((plan) => {
             const isStar = plan.isPopular;
 
             return (
               <div
                 key={plan.id}
-                className={`relative rounded-2xl flex flex-col justify-between transition-all duration-200 bg-white ${
+                className={`w-[84vw] max-w-[320px] shrink-0 snap-center sm:w-auto sm:max-w-none sm:shrink relative rounded-2xl flex flex-col justify-between transition-all duration-200 bg-white ${
                   isStar
-                    ? "border-2 border-[#141534] shadow-[6px_6px_0px_#141534] lg:-translate-y-1.5"
+                    ? "border-2 border-[#141534] shadow-[5px_5px_0px_#141534] sm:shadow-[6px_6px_0px_#141534] lg:-translate-y-1.5"
                     : "border border-[#141534]/15 hover:border-[#141534]/40 hover:shadow-md"
                 }`}
               >
@@ -66,7 +66,7 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
                   </div>
                 )}
 
-                <div className="p-5 sm:p-6 flex-1 flex flex-col">
+                <div className="p-4 sm:p-6 flex-1 flex flex-col">
                   {/* Technical index + Badge */}
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[10px] font-mono text-[#84818A] font-bold">
@@ -80,31 +80,31 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
                   </div>
 
                   {/* Plan Name */}
-                  <h3 className="font-heading text-lg font-black text-[#141534] tracking-tight mb-1">
+                  <h3 className="font-heading text-base sm:text-lg font-black text-[#141534] tracking-tight mb-1">
                     {plan.name}
                   </h3>
 
                   {/* Tagline */}
-                  <p className="text-xs text-[#585A74] mb-4 leading-normal">
+                  <p className="text-xs text-[#585A74] mb-3 sm:mb-4 leading-normal">
                     {plan.tagline}
                   </p>
 
                   {/* Quote Indicator */}
-                  <div className="mb-4 p-3 rounded-xl bg-[#F4F2EB] border border-[#141534]/10">
+                  <div className="mb-3 sm:mb-4 p-2.5 sm:p-3 rounded-xl bg-[#F4F2EB] border border-[#141534]/10">
                     <span className="text-[9px] font-mono uppercase text-[#585A74] font-bold block">
                       Inversión
                     </span>
                     <p className="text-xs font-black text-[#141534] mt-0.5">
                       {plan.quoteIndicator}
                     </p>
-                    <div className="flex items-center gap-1 text-[11px] text-[#585A74] mt-1 font-mono">
+                    <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-[#585A74] mt-1 font-mono">
                       <Clock className="w-3 h-3 text-[#585A74]" />
                       <span>Entrega: {plan.estimatedDelivery}</span>
                     </div>
                   </div>
 
                   {/* Deliverables Checklist */}
-                  <div className="space-y-2 mb-6 flex-1">
+                  <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 flex-1">
                     <span className="text-[10px] font-mono uppercase text-[#585A74] font-bold block mb-1">
                       Incluye:
                     </span>
@@ -119,7 +119,7 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
                         >
                           <Check className="w-2.5 h-2.5" />
                         </div>
-                        <span className="text-xs text-[#141534]/85 leading-tight font-medium">
+                        <span className="text-[11px] sm:text-xs text-[#141534]/85 leading-tight font-medium">
                           {item}
                         </span>
                       </div>
@@ -128,10 +128,10 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
                 </div>
 
                 {/* Action CTA */}
-                <div className="p-5 sm:p-6 pt-0">
+                <div className="p-4 sm:p-6 pt-0">
                   <button
                     onClick={() => onSelectPlan(plan)}
-                    className={`w-full py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                    className={`w-full py-2.5 sm:py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                       isStar
                         ? "bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534] border-2 border-[#141534] shadow-sm hover:translate-y-[-1px]"
                         : "bg-[#141534] hover:bg-[#222452] text-white"
@@ -144,6 +144,11 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
               </div>
             );
           })}
+        </div>
+
+        {/* Mobile Swipe Hint */}
+        <div className="flex sm:hidden items-center justify-center gap-1.5 mt-2 font-mono text-[10px] text-[#585A74]">
+          <span>↔ Desliza horizontalmente para ver todos los planes</span>
         </div>
       </div>
     </section>

@@ -13,35 +13,35 @@ export default function FaqSection() {
   };
 
   return (
-    <section id="preguntas" className="relative py-20 md:py-28 bg-[#F4F2EB] border-t border-[#141534]/10 overflow-hidden scroll-mt-20">
+    <section id="preguntas" className="relative py-10 sm:py-16 md:py-24 bg-[#F4F2EB] border-t border-[#141534]/10 overflow-hidden scroll-mt-20">
       <div id="faq" className="absolute -top-24" />
 
       {/* Background dot matrix texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
 
       {/* Decorative Lavender Star (Top Left) */}
-      <div className="absolute top-10 left-6 sm:left-14 pointer-events-none opacity-80">
+      <div className="absolute top-6 left-3 sm:top-10 sm:left-14 pointer-events-none opacity-80 scale-75 sm:scale-100 origin-top-left">
         <LavenderStar size={75} />
       </div>
 
       {/* Decorative Slate Asterisk (Bottom Right) */}
-      <div className="absolute bottom-8 right-6 sm:right-12 pointer-events-none opacity-50">
+      <div className="absolute bottom-4 right-3 sm:bottom-8 sm:right-12 pointer-events-none opacity-50 scale-75 sm:scale-100 origin-bottom-right">
         <SlateAsterisk size={65} />
       </div>
 
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-xs tracking-wider uppercase mb-3">
+        <div className="text-center mb-6 sm:mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-2 sm:mb-3">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Preguntas Frecuentes</span>
           </div>
 
-          <h2 className="font-heading text-3xl sm:text-4xl font-black text-[#141534] tracking-tight mb-2">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-black text-[#141534] tracking-tight mb-2">
             Resolvemos tus dudas.
           </h2>
 
-          <p className="text-sm sm:text-base text-[#585A74]">
+          <p className="text-xs sm:text-base text-[#585A74]">
             Todo claro desde el primer día sobre tiempos, cobros y propiedad del código.
           </p>
         </div>

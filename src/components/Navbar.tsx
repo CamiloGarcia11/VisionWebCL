@@ -17,7 +17,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
   const navItems = [
     { value: "planes", label: "Planes", href: "#planes" },
     { value: "portafolio", label: "Portafolio", href: "#portafolio" },
-    { value: "infraestructura", label: "Infraestructura", href: "#infraestructura" },
+    { value: "infraestructura", label: "Servicios", href: "#infraestructura" },
     { value: "proceso", label: "Proceso", href: "#proceso" },
     { value: "preguntas", label: "Preguntas", href: "#preguntas" },
   ];
@@ -100,7 +100,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
           </a>
 
           {/* Desktop Navigation with React Bits RubberSegment */}
-          <nav className="hidden md:flex items-center">
+          <nav className="hidden lg:flex items-center">
             <RubberSegment
               items={navItems}
               value={activeSection}
@@ -136,11 +136,11 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile & Tablet Menu Button */}
+          <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-white text-[#141534] border border-[#141534]/10"
+              className="p-2 rounded-xl bg-white text-[#141534] border border-[#141534]/10 shadow-sm cursor-pointer"
               aria-label="Abrir menú"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -149,9 +149,9 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile & Tablet Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#F4F2EB] border-b border-[#141534]/10 px-6 py-5 space-y-3">
+        <div className="lg:hidden bg-[#F4F2EB]/95 backdrop-blur-xl border-b border-[#141534]/10 px-6 py-5 space-y-3 shadow-xl">
           <div className="flex flex-col space-y-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.value;

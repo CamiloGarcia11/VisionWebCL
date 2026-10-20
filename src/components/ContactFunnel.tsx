@@ -56,33 +56,33 @@ Quedo atento a su respuesta. ¡Muchas gracias!`;
   };
 
   return (
-    <section id="contacto" className="relative py-20 md:py-28 bg-[#F4F2EB] border-t border-[#141534]/10 overflow-hidden">
+    <section id="contacto" className="relative py-10 sm:py-16 md:py-24 bg-[#F4F2EB] border-t border-[#141534]/10 overflow-hidden">
       {/* Background dot matrix texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
 
       {/* Decorative Lavender Star (Top Right) */}
-      <div className="absolute top-10 right-6 sm:right-14 pointer-events-none opacity-80">
+      <div className="absolute top-6 right-3 sm:top-10 sm:right-14 pointer-events-none opacity-80 scale-75 sm:scale-100 origin-top-right">
         <LavenderStar size={80} />
       </div>
 
       {/* Decorative Slate Asterisk (Bottom Left) */}
-      <div className="absolute bottom-8 left-6 sm:left-12 pointer-events-none opacity-50">
+      <div className="absolute bottom-4 left-3 sm:bottom-8 sm:left-12 pointer-events-none opacity-50 scale-75 sm:scale-100 origin-bottom-left">
         <SlateAsterisk size={70} />
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-xs tracking-wider uppercase mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-2 sm:mb-3">
             <MessageSquare className="w-3.5 h-3.5" />
             <span>Escríbenos Directo</span>
           </div>
 
-          <h2 className="font-heading text-3xl sm:text-4xl font-black text-[#141534] tracking-tight mb-2">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-black text-[#141534] tracking-tight mb-2">
             Cotiza en 30 segundos por WhatsApp.
           </h2>
 
-          <p className="text-sm sm:text-base text-[#585A74]">
+          <p className="text-xs sm:text-base text-[#585A74]">
             Elige lo que necesitas, dinos tu idea y te responderemos al instante sin rodeos.
           </p>
         </div>

@@ -6,7 +6,7 @@ import { TechnicalCross } from "@/components/ui/BrandDeco";
 
 export default function CurvedLoopBanner() {
   return (
-    <div className="relative w-full py-4 sm:py-6 overflow-hidden select-none">
+    <div className="relative w-full py-2.5 sm:py-4 md:py-6 overflow-hidden select-none">
       {/* Background technical accents to integrate into the page canvas */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-between px-6 sm:px-12 opacity-30">
         <div className="flex items-center gap-2 font-mono text-[11px] text-[#141534]">

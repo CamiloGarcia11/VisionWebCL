@@ -6,12 +6,12 @@ import TechText from "@/components/ui/TechText";
 
 export default function Hero() {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+    <section className="relative pt-24 pb-8 sm:pt-28 sm:pb-12 md:pt-36 md:pb-20 overflow-hidden">
       {/* Background canvas texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
 
       {/* Decorative Lavender Star (Matching User Reference Image Top-Left) */}
-      <div className="absolute top-12 left-4 sm:top-20 sm:left-12 pointer-events-none select-none opacity-80">
+      <div className="absolute top-8 left-2 sm:top-20 sm:left-12 pointer-events-none select-none opacity-80 scale-75 sm:scale-100 origin-top-left">
         <svg width="120" height="120" viewBox="0 0 100 100" fill="none" className="text-[#A29EDB]">
           <path
             d="M50 0L54 38L92 20L62 48L100 50L62 52L92 80L54 62L50 100L46 62L8 80L38 52L0 50L38 48L8 20L46 38L50 0Z"
@@ -22,7 +22,7 @@ export default function Hero() {
       </div>
 
       {/* Decorative Asterisk (Matching User Reference Image Bottom-Right) */}
-      <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-16 pointer-events-none select-none opacity-40">
+      <div className="absolute bottom-4 right-3 sm:bottom-10 sm:right-16 pointer-events-none select-none opacity-40 scale-75 sm:scale-100 origin-bottom-right">
         <svg width="90" height="90" viewBox="0 0 100 100" fill="currentColor" className="text-[#84818A]">
           <rect x="42" y="5" width="16" height="90" rx="8" />
           <rect x="42" y="5" width="16" height="90" rx="8" transform="rotate(60 50 50)" />
@@ -32,7 +32,7 @@ export default function Hero() {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         {/* Monospace Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-xs tracking-wider mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider mb-4 sm:mb-8">
           <span className="w-2 h-2 rounded-full bg-[#D5DD54] border border-[#141534]"></span>
           <span>[ PÁGINAS WEB Y TIENDAS QUE SÍ VENDEN ]</span>
         </div>
