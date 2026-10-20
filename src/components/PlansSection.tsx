@@ -27,7 +27,7 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10 md:mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-2 sm:mb-4 md:mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-2 sm:mb-3">
             <Layers className="w-3.5 h-3.5" />
             <span>Planes y Servicios</span>
@@ -43,7 +43,7 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
         </div>
 
         {/* Pricing Cards: Mobile horizontal swipe, Desktop 4-col grid */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 sm:overflow-visible items-stretch custom-scrollbar">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pt-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pt-6 sm:pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 sm:overflow-visible items-stretch custom-scrollbar">
           {DEVELOPMENT_PLANS.map((plan) => {
             const isStar = plan.isPopular;
 
@@ -58,8 +58,8 @@ export default function PlansSection({ onSelectPlan }: PlansSectionProps) {
               >
                 {/* Luminous Top Badge for Star Plan */}
                 {isStar && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
-                    <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#D5DD54] text-[#141534] border border-[#141534] shadow-sm">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+                    <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[#D5DD54] text-[#141534] border border-[#141534] shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3 fill-[#141534]" />
                       {plan.badge}
                     </span>
