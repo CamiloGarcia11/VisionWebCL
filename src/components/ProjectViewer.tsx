@@ -100,8 +100,8 @@ export default function ProjectViewer() {
 
         {/* Main Showcase Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left: Project Selector Cards (4 Cols) */}
-          <div className="lg:col-span-4 space-y-2.5 order-2 lg:order-1">
+          {/* Left: Project Selector Cards (4 Cols on Desktop, Horizontal Swipe on Mobile) */}
+          <div className="lg:col-span-4 space-y-2 lg:space-y-2.5 order-2 lg:order-1">
             <div className="flex items-center justify-between pb-1">
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#585A74] font-bold">
                 Elige una página ({filteredProjects.length})
@@ -109,14 +109,14 @@ export default function ProjectViewer() {
               <span className="text-[11px] font-mono text-[#141534] font-bold">● Funcionando</span>
             </div>
 
-            <div className="space-y-2.5 max-h-[580px] overflow-y-auto pr-3.5 pl-1 py-1.5 custom-scrollbar">
+            <div className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto snap-x snap-mandatory gap-3 pb-3 pt-1 -mx-4 px-4 lg:mx-0 lg:px-0 lg:max-h-[580px] lg:space-y-2.5 lg:pr-3.5 lg:pl-1 lg:py-1.5 custom-scrollbar">
               {filteredProjects.map((project) => {
                 const isSelected = project.id === activeProject.id;
                 return (
                   <button
                     key={project.id}
                     onClick={() => handleSelectProject(project)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    className={`w-[84vw] max-w-[320px] shrink-0 snap-center lg:w-full lg:max-w-none lg:shrink text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
                       isSelected
                         ? "bg-white border-2 border-[#141534] shadow-[4px_4px_0px_#141534]"
                         : "bg-white/70 hover:bg-white border-[#141534]/15 text-[#585A74]"
@@ -150,8 +150,16 @@ export default function ProjectViewer() {
               })}
             </div>
 
-            {/* Direct Status */}
-            <div className="p-3 rounded-xl bg-white border border-[#141534]/15 text-xs flex items-center justify-between">
+            {/* Mobile Swipe Hint */}
+            <div className="flex lg:hidden items-center justify-between text-[10px] font-mono text-[#585A74] pt-1 px-1">
+              <span>↔ Desliza para ver más proyectos</span>
+              <span className="font-bold text-[#141534]">
+                {filteredProjects.findIndex((p) => p.id === activeProject.id) + 1} de {filteredProjects.length}
+              </span>
+            </div>
+
+            {/* Direct Status (Desktop only) */}
+            <div className="hidden lg:flex p-3 rounded-xl bg-white border border-[#141534]/15 text-xs items-center justify-between">
               <span className="text-[#141534] font-bold">Página al aire y lista</span>
               <span className="text-[10px] font-mono text-[#141534] bg-[#D5DD54] px-2 py-0.5 rounded font-black border border-[#141534]">
                 Al aire
