@@ -3,12 +3,33 @@
 import React from "react";
 import { ArrowRight, Play, Zap, CheckCircle2, ShieldCheck, Rocket } from "lucide-react";
 import TechText from "@/components/ui/TechText";
+import AsciiRipple from "@/components/ui/AsciiRipple";
 
 export default function Hero() {
   return (
     <section className="relative pt-24 pb-8 sm:pt-28 sm:pb-12 md:pt-36 md:pb-20 overflow-hidden">
       {/* Background canvas texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
+
+      {/* ASCII Ripple Interactive Fluid Wave Simulation (React Bits Pro) */}
+      <AsciiRipple
+        className="absolute inset-0 pointer-events-none z-0"
+        cellSize={13}
+        characters=" ·.:~=+*#%@"
+        sensitivity={2.2}
+        slopeGain={1.0}
+        refraction={4}
+        scramble={1.0}
+        scrambleSpeed={90}
+        dither={0.5}
+        vignette={0.65}
+        baseColor="rgba(20, 21, 52, 0.08)"
+        inkColor="#141534"
+        accentColor="#D5DD54"
+        secondaryAccent="#A29EDB"
+        ambientDrops={true}
+        ambientInterval={3500}
+      />
 
       {/* Decorative Lavender Star (Matching User Reference Image Top-Left) */}
       <div className="absolute top-8 left-2 sm:top-20 sm:left-12 pointer-events-none select-none opacity-80 scale-75 sm:scale-100 origin-top-left">
