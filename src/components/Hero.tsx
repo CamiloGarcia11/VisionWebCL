@@ -13,22 +13,21 @@ export default function Hero() {
 
       {/* ASCII Ripple Interactive Fluid Wave Simulation (React Bits Pro) */}
       <AsciiRipple
-        className="absolute inset-0 pointer-events-none z-0"
-        cellSize={13}
-        characters=" ·.:~=+*#%@"
+        className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        cellSize={14}
         sensitivity={2.2}
-        slopeGain={1.0}
+        slopeGain={1.2}
         refraction={4}
         scramble={1.0}
-        scrambleSpeed={90}
-        dither={0.5}
-        vignette={0.65}
-        baseColor="rgba(20, 21, 52, 0.08)"
+        scrambleSpeed={80}
+        dither={0.4}
+        vignette={0.5}
+        baseColor="rgba(20, 21, 52, 0.13)"
         inkColor="#141534"
         accentColor="#D5DD54"
         secondaryAccent="#A29EDB"
         ambientDrops={true}
-        ambientInterval={3500}
+        ambientInterval={3200}
       />
 
       {/* Decorative Lavender Star (Matching User Reference Image Top-Left) */}
