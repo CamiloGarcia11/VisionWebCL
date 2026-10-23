@@ -16,39 +16,29 @@ export interface AsciiRippleHandle {
 export interface AsciiRippleProps {
   /**
    * String of glyphs from lightest to heaviest disturbance.
-   * Default: " ·.:~=+*#%@"
+   * Default: " ·:+~*#%"
    */
   characters?: string;
   /**
    * How strongly surface height maps to glyph intensity.
-   * Default: 2.2
+   * Default: 1.8
    */
   sensitivity?: number;
   /**
    * How strongly surface slope adds to glyph intensity.
-   * Default: 1.2
+   * Default: 1.0
    */
   slopeGain?: number;
   /**
-   * How far the underlying text is displaced by the slope, in cells.
-   * Default: 4
+   * How far the underlying characters are displaced by the slope, in pixels.
+   * Default: 3
    */
   refraction?: number;
   /**
-   * How readily disturbed cells swap to palette glyphs (0 to 1).
-   * Default: 1.0
-   */
-  scramble?: number;
-  /**
    * Milliseconds between glyph reshuffles inside a ripple.
-   * Default: 80
+   * Default: 100
    */
   scrambleSpeed?: number;
-  /**
-   * Edge texture of the disturbed region (0 hard to 1 grainy).
-   * Default: 0.4
-   */
-  dither?: number;
   /**
    * Width of the edge fade as a fraction of the shorter half-side (0 to 1).
    * Default: 0.5
@@ -60,8 +50,8 @@ export interface AsciiRippleProps {
    */
   interactive?: boolean;
   /**
-   * Cell size in pixels (both width and height of each character cell).
-   * Default: 14
+   * Cell size in pixels (spacing between characters).
+   * Default: 16
    */
   cellSize?: number;
   /**
@@ -70,17 +60,12 @@ export interface AsciiRippleProps {
    */
   fontFamily?: string;
   /**
-   * Base color for undisturbed/resting characters.
-   * Default: rgba(20, 21, 52, 0.12)
-   */
-  baseColor?: string;
-  /**
-   * Primary brand accent for ripple highlights (Acid Lime #D5DD54).
+   * Primary brand accent for ripple peaks (Acid Lime #D5DD54).
    * Default: #D5DD54
    */
   accentColor?: string;
   /**
-   * Secondary brand accent for ripple crests (Electric Lavender #A29EDB).
+   * Secondary brand accent for ripple mid-crests (Electric Lavender #A29EDB).
    * Default: #A29EDB
    */
   secondaryAccent?: string;
@@ -89,16 +74,6 @@ export interface AsciiRippleProps {
    * Default: #141534
    */
   inkColor?: string;
-  /**
-   * Whether gentle ambient drops occur periodically.
-   * Default: true
-   */
-  ambientDrops?: boolean;
-  /**
-   * Average milliseconds between ambient drops.
-   * Default: 3200
-   */
-  ambientInterval?: number;
   /**
    * Additional CSS classes for the root container.
    */
@@ -109,29 +84,23 @@ export interface AsciiRippleProps {
   children?: React.ReactNode;
 }
 
-const DEFAULT_CHARS = " ·.:~=+*#%@";
-const BASE_GLYPHS = ["·", "+", "·", "~", "·", "×", "·", "*", "."];
+const DEFAULT_CHARS = " ·:+~*#%";
 
 export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
   (
     {
       characters = DEFAULT_CHARS,
-      sensitivity = 2.2,
-      slopeGain = 1.2,
-      refraction = 4,
-      scramble = 1.0,
-      scrambleSpeed = 80,
-      dither = 0.4,
+      sensitivity = 1.8,
+      slopeGain = 1.0,
+      refraction = 3,
+      scrambleSpeed = 100,
       vignette = 0.5,
       interactive = true,
-      cellSize = 14,
+      cellSize = 16,
       fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-      baseColor = "rgba(20, 21, 52, 0.13)",
       accentColor = "#D5DD54",
       secondaryAccent = "#A29EDB",
       inkColor = "#141534",
-      ambientDrops = true,
-      ambientInterval = 3200,
       className = "",
       children
     },
@@ -151,8 +120,7 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       height: number;
       lastScrambleTime: number;
       scrambleSeed: number;
-      lastDropTime: number;
-      isInitialized: boolean;
+      activeEnergy: number;
     }>({
       cols: 0,
       rows: 0,
@@ -163,13 +131,12 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       height: 0,
       lastScrambleTime: 0,
       scrambleSeed: 0,
-      lastDropTime: 0,
-      isInitialized: false
+      activeEnergy: 0
     });
 
-    // Create a drop at canvas pixel coordinates (px, py)
+    // Create a localized drop at canvas pixel coordinates (px, py)
     const dropAt = useCallback(
-      (px: number, py: number, strength: number = 18.0, radius: number = 3.0) => {
+      (px: number, py: number, strength: number = 6.0, radius: number = 2.0) => {
         const sim = simRef.current;
         if (sim.cols <= 0 || sim.rows <= 0) return;
 
@@ -194,6 +161,8 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
             }
           }
         }
+
+        sim.activeEnergy = 100; // Awaken simulation
       },
       [cellSize]
     );
@@ -203,6 +172,7 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       const sim = simRef.current;
       sim.buf1.fill(0);
       sim.buf2.fill(0);
+      sim.activeEnergy = 0;
     }, []);
 
     // Expose AsciiRippleHandle via ref
@@ -228,13 +198,13 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       if (!ctx) return;
 
       const sim = simRef.current;
-      const damping = 0.982;
+      // High damping so ripples cleanly fade out in ~0.9s without bouncing forever
+      const damping = 0.935;
 
       const resize = () => {
         const rect = container.getBoundingClientRect();
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-        // Fallback to window dimensions if container has not yet calculated layout
         const w = Math.max(200, Math.floor(rect.width || window.innerWidth));
         const h = Math.max(200, Math.floor(rect.height || window.innerHeight * 0.85));
 
@@ -256,17 +226,6 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
         sim.rows = rows;
         sim.buf1 = new Float32Array(cols * rows);
         sim.buf2 = new Float32Array(cols * rows);
-
-        // Initial welcoming ripples on load
-        if (!sim.isInitialized) {
-          sim.isInitialized = true;
-          setTimeout(() => {
-            dropAt(w * 0.35, h * 0.4, 22.0, 3.5);
-          }, 400);
-          setTimeout(() => {
-            dropAt(w * 0.65, h * 0.5, 18.0, 3.2);
-          }, 900);
-        }
       };
 
       const resizeObserver = new ResizeObserver(() => {
@@ -276,26 +235,24 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       window.addEventListener("resize", resize, { passive: true });
       resize();
 
-      // Pointer event listeners on window to capture cursor anywhere over the Hero
+      // Pointer event listeners: ONLY triggers when the user intentionally moves their cursor
       let lastMoveTime = 0;
       const handlePointerMove = (e: PointerEvent | MouseEvent) => {
         if (!interactive) return;
 
         const rect = container.getBoundingClientRect();
-        // Check if pointer is within or close to the Hero container
         if (
-          e.clientX >= rect.left - 40 &&
-          e.clientX <= rect.right + 40 &&
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
           e.clientY >= rect.top &&
-          e.clientY <= rect.bottom + 40
+          e.clientY <= rect.bottom
         ) {
           const now = performance.now();
-          if (now - lastMoveTime > 24) {
-            // ~40fps rate-limit for silky fluid wave trails
+          if (now - lastMoveTime > 35) {
             lastMoveTime = now;
-            const px = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-            const py = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
-            dropAt(px, py, 16.0, 2.8);
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+            dropAt(px, py, 6.0, 1.8);
           }
         }
       };
@@ -310,9 +267,9 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
           e.clientY >= rect.top &&
           e.clientY <= rect.bottom
         ) {
-          const px = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-          const py = Math.max(0, Math.min(rect.height, e.clientY - rect.top));
-          dropAt(px, py, 26.0, 4.2);
+          const px = e.clientX - rect.left;
+          const py = e.clientY - rect.top;
+          dropAt(px, py, 12.0, 2.8);
         }
       };
 
@@ -327,23 +284,21 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
         const rows = sim.rows;
         if (cols <= 0 || rows <= 0) return;
 
-        // Periodic gentle ambient drops
-        if (ambientDrops && time - sim.lastDropTime > ambientInterval) {
-          sim.lastDropTime = time;
-          const rx = (0.2 + Math.random() * 0.6) * sim.width;
-          const ry = (0.2 + Math.random() * 0.6) * sim.height;
-          dropAt(rx, ry, 18.0 + Math.random() * 6.0, 3.2 + Math.random());
+        // If the surface has settled completely and no energy exists, stay calm & clear
+        if (sim.activeEnergy <= 0) {
+          return;
         }
 
         // Reshuffle scramble seed
         if (time - sim.lastScrambleTime > scrambleSpeed) {
           sim.lastScrambleTime = time;
-          sim.scrambleSeed = Math.floor(Math.random() * 1000);
+          sim.scrambleSeed = Math.floor(Math.random() * 500);
         }
 
         // 1. Water Ripple Physics Simulation (Hugo Elias Wave Equation)
         const current = sim.buf1;
         const previous = sim.buf2;
+        let totalEnergy = 0;
 
         for (let y = 1; y < rows - 1; y++) {
           const rowIdx = y * cols;
@@ -357,19 +312,32 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
                 0.5 -
               previous[idx];
 
-            previous[idx] = val * damping;
+            const damped = val * damping;
+            previous[idx] = damped;
+
+            const absVal = Math.abs(damped);
+            if (absVal > 0.02) {
+              totalEnergy += absVal;
+            }
           }
         }
 
-        // Swap buffers: previous becomes the new current height map
+        // Swap buffers
         sim.buf1 = previous;
         sim.buf2 = current;
 
-        // 2. Clear canvas
+        // If energy faded to near-zero, calm down and clear screen
+        if (totalEnergy < 0.05) {
+          sim.activeEnergy = 0;
+          ctx.clearRect(0, 0, sim.width, sim.height);
+          return;
+        }
+
+        // 2. Clear canvas to keep resting background 100% clean
         ctx.clearRect(0, 0, sim.width, sim.height);
 
         // Character setup
-        ctx.font = `600 ${Math.round(cellSize * 0.88)}px ${fontFamily}`;
+        ctx.font = `600 ${Math.round(cellSize * 0.85)}px ${fontFamily}`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
@@ -378,23 +346,22 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
         const cyHalf = rows * 0.5;
         const minDimHalf = Math.max(1, Math.min(cxHalf, cyHalf));
 
-        // 3. Render ASCII Grid
+        // 3. Render ASCII ripples ONLY where the wave is currently passing
         const grid = sim.buf1;
         const halfCell = cellSize * 0.5;
-        const baseGlyphsLen = BASE_GLYPHS.length;
 
         for (let y = 0; y < rows; y++) {
           const rowOffset = y * cols;
           const py = y * cellSize + halfCell;
-
-          // Vertical edge vignette factor
           const dyCenter = Math.abs(y - cyHalf) / minDimHalf;
 
           for (let x = 0; x < cols; x++) {
             const idx = rowOffset + x;
             const h = grid[idx] || 0;
 
-            // Surface slope calculation (horizontal & vertical gradient)
+            // Fast skip for quiet/resting cells - keeps screen completely uncluttered!
+            if (Math.abs(h) < 0.03) continue;
+
             const left = x > 0 ? grid[idx - 1] : h;
             const right = x < cols - 1 ? grid[idx + 1] : h;
             const top = y > 0 ? grid[idx - cols] : h;
@@ -404,66 +371,48 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
             const slopeY = (bottom - top) * 0.5;
             const slope = Math.sqrt(slopeX * slopeX + slopeY * slopeY);
 
-            // Normalized intensity mapping (scaled for visual clarity)
-            let intensity = Math.abs(h) * 0.12 * sensitivity + slope * 0.14 * slopeGain;
+            // Normalized intensity
+            let intensity = Math.abs(h) * 0.22 * sensitivity + slope * 0.25 * slopeGain;
+
+            // Soft threshold: if barely disturbed, leave clean
+            if (intensity < 0.08) continue;
 
             // Edge vignette fade
             if (vignette > 0) {
               const dxCenter = Math.abs(x - cxHalf) / minDimHalf;
               const distNorm = Math.sqrt(dxCenter * dxCenter + dyCenter * dyCenter);
-              const vigFactor = Math.max(0, 1 - distNorm * (vignette * 0.85));
+              const vigFactor = Math.max(0, 1 - distNorm * (vignette * 0.9));
               intensity *= vigFactor;
             }
 
-            // Dither grain
-            if (dither > 0 && intensity > 0.05) {
-              const grain = ((x * 17 + y * 31 + sim.scrambleSeed) % 10) / 10 - 0.5;
-              intensity += grain * dither * 0.12;
-            }
+            if (intensity < 0.08) continue;
 
             const px = x * cellSize + halfCell;
-            const baseChar = BASE_GLYPHS[(x * 3 + y * 5) % baseGlyphsLen];
 
-            // Render based on intensity tier
-            if (intensity <= 0.05) {
-              // Undisturbed resting state: crisp, clean subtle monospace ASCII pattern
-              ctx.fillStyle = baseColor;
-              ctx.fillText(baseChar, px, py);
+            // Refraction shift: characters displace with water slope
+            const shiftX = Math.max(-6, Math.min(6, Math.round(slopeX * refraction * 1.2)));
+            const shiftY = Math.max(-6, Math.min(6, Math.round(slopeY * refraction * 1.2)));
+
+            // Pick ASCII glyph based on intensity
+            const charIdx = Math.min(
+              charsLen - 1,
+              Math.max(1, Math.floor(intensity * (charsLen - 1)))
+            );
+            const glyph = characters[charIdx] || characters[1];
+
+            // Subtle color tiers matching VisionWeb's palette:
+            if (intensity > 0.55) {
+              // Peak: Acid lime highlight
+              ctx.fillStyle = accentColor;
+              ctx.fillText(glyph, px + shiftX, py + shiftY);
+            } else if (intensity > 0.25) {
+              // Mid wave: Soft electric lavender
+              ctx.fillStyle = secondaryAccent;
+              ctx.fillText(glyph, px + shiftX, py + shiftY);
             } else {
-              // Disturbed ripple state: Optical refraction displacement
-              const shiftX = Math.max(-10, Math.min(10, Math.round(slopeX * refraction * 1.8)));
-              const shiftY = Math.max(-10, Math.min(10, Math.round(slopeY * refraction * 1.8)));
-
-              // Scramble glyph selection inside ripple
-              let glyph: string;
-              if (scramble > 0 && Math.random() < scramble * 0.35) {
-                const sIdx = (x * 7 + y * 13 + sim.scrambleSeed) % (charsLen - 1) + 1;
-                glyph = characters[sIdx] || characters[charsLen - 1];
-              } else {
-                const charIdx = Math.min(
-                  charsLen - 1,
-                  Math.max(1, Math.floor(intensity * (charsLen - 1)))
-                );
-                glyph = characters[charIdx] || characters[charsLen - 1];
-              }
-
-              // VisionWeb Colorimetry Integration:
-              if (intensity > 0.55) {
-                // Crest peak: Acid Lime highlight with subtle glow
-                ctx.fillStyle = accentColor;
-                ctx.shadowColor = accentColor;
-                ctx.shadowBlur = 5;
-                ctx.fillText(glyph, px + shiftX, py + shiftY);
-                ctx.shadowBlur = 0;
-              } else if (intensity > 0.22) {
-                // Mid crest: Electric Lavender accent
-                ctx.fillStyle = secondaryAccent;
-                ctx.fillText(glyph, px + shiftX, py + shiftY);
-              } else {
-                // Wave body: Deep Midnight Ink
-                ctx.fillStyle = inkColor;
-                ctx.fillText(glyph, px + shiftX, py + shiftY);
-              }
+              // Soft wave body: Elegant slate/ink
+              ctx.fillStyle = inkColor;
+              ctx.fillText(glyph, px + shiftX, py + shiftY);
             }
           }
         }
@@ -483,19 +432,14 @@ export const AsciiRipple = forwardRef<AsciiRippleHandle, AsciiRippleProps>(
       sensitivity,
       slopeGain,
       refraction,
-      scramble,
       scrambleSpeed,
-      dither,
       vignette,
       interactive,
       cellSize,
       fontFamily,
-      baseColor,
       accentColor,
       secondaryAccent,
       inkColor,
-      ambientDrops,
-      ambientInterval,
       dropAt
     ]);
 

@@ -11,23 +11,19 @@ export default function Hero() {
       {/* Background canvas texture */}
       <div className="absolute inset-0 bg-canvas-pattern pointer-events-none"></div>
 
-      {/* ASCII Ripple Interactive Fluid Wave Simulation (React Bits Pro) */}
+      {/* ASCII Ripple Interactive Fluid Wave Simulation (React Bits Pro - Subtle & Interactive) */}
       <AsciiRipple
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
-        cellSize={14}
-        sensitivity={2.2}
-        slopeGain={1.2}
-        refraction={4}
-        scramble={1.0}
-        scrambleSpeed={80}
-        dither={0.4}
+        cellSize={16}
+        characters=" ·:+~*#%"
+        sensitivity={1.8}
+        slopeGain={1.0}
+        refraction={3}
+        scrambleSpeed={100}
         vignette={0.5}
-        baseColor="rgba(20, 21, 52, 0.13)"
-        inkColor="#141534"
+        inkColor="rgba(20, 21, 52, 0.45)"
         accentColor="#D5DD54"
         secondaryAccent="#A29EDB"
-        ambientDrops={true}
-        ambientInterval={3200}
       />
 
       {/* Decorative Lavender Star (Matching User Reference Image Top-Left) */}
