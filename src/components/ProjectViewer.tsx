@@ -279,10 +279,11 @@ export default function ProjectViewer() {
                     title={activeProject.title}
                     loading="lazy"
                     onLoad={handleIframeLoad}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     className={`w-full h-full border-0 transition-opacity duration-300 ${
                       isLoading ? "opacity-0" : "opacity-100"
                     } ${isInteractive ? "pointer-events-auto" : "pointer-events-none"}`}
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-presentation"
                   />
 
                   {/* Scroll trap prevention */}
