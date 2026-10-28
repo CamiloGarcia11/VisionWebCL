@@ -3,7 +3,7 @@ export interface Project {
   title: string;
   url: string;
   displayUrl: string;
-  category: "ecommerce" | "web" | "platform" | "bio";
+  category: "ecommerce" | "web" | "platform" | "bio" | "ugc";
   categoryLabel: string;
   shortDescription: string;
   technologies: string[];
@@ -19,6 +19,26 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     categoryLabel: "Tienda Online",
     shortDescription: "Tienda de ropa con catálogo, carrito de compras y pagos en línea con tarjeta o PSE.",
     technologies: ["Tienda Online", "Pagos Nequi / PSE", "Abre al Instante"]
+  },
+  {
+    id: "sofia-cruz-ugc",
+    title: "Sofía Cruz UGC",
+    url: "https://sofiacruz.pages.dev/",
+    displayUrl: "sofiacruz.pages.dev",
+    category: "ugc",
+    categoryLabel: "Portafolio UGC",
+    shortDescription: "Portafolio interactivo para creadora de contenido UGC, con showcase de videos para marcas y contacto directo.",
+    technologies: ["Portafolio UGC", "Videos de Marca", "Contacto Directo"]
+  },
+  {
+    id: "tricom-link",
+    title: "Tricom Link",
+    url: "https://tricomlink.vercel.app/",
+    displayUrl: "tricomlink.vercel.app",
+    category: "bio",
+    categoryLabel: "Página Linktree",
+    shortDescription: "Página tipo Linktree multi-enlaces para redes sociales, conectando con WhatsApp y canales de atención.",
+    technologies: ["Página Linktree", "Multi-enlaces", "100% Celular"]
   },
   {
     id: "cuadros-mi-angel",
@@ -56,7 +76,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     url: "https://pijamasmiangeltree.vercel.app/",
     displayUrl: "pijamasmiangeltree.vercel.app",
     category: "bio",
-    categoryLabel: "Menú para Redes",
+    categoryLabel: "Página Linktree",
     shortDescription: "Página para poner en el perfil de Instagram y enviar clientes a WhatsApp y la tienda.",
     technologies: ["Ideal para Instagram", "Abre en 1 Segundo", "100% Celular"]
   },
@@ -75,6 +95,8 @@ export const PORTFOLIO_PROJECTS: Project[] = [
 export const PROJECT_CATEGORIES = [
   { id: "all", label: "Todos" },
   { id: "ecommerce", label: "Tiendas Online" },
+  { id: "ugc", label: "Portafolio UGC" },
+  { id: "bio", label: "Páginas Linktree" },
   { id: "platform", label: "Sistemas & Pedidos" },
   { id: "web", label: "Páginas de Servicios" }
 ];

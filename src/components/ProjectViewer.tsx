@@ -40,6 +40,17 @@ export default function ProjectViewer() {
     setIframeKey((prev) => prev + 1);
   };
 
+  const handleCategoryChange = (catId: string) => {
+    setActiveCategory(catId);
+    const newFiltered = PORTFOLIO_PROJECTS.filter((p) => {
+      if (catId === "all") return true;
+      return p.category === catId;
+    });
+    if (newFiltered.length > 0 && !newFiltered.some((p) => p.id === activeProject.id)) {
+      handleSelectProject(newFiltered[0]);
+    }
+  };
+
   const handleReload = () => {
     setIsLoading(true);
     setIframeKey((prev) => prev + 1);
@@ -86,7 +97,7 @@ export default function ProjectViewer() {
           {PROJECT_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => handleCategoryChange(cat.id)}
               className={`px-4 py-2 rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer ${
                 activeCategory === cat.id
                   ? "bg-[#141534] text-white shadow-sm"
