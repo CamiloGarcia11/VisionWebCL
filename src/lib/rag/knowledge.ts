@@ -211,7 +211,8 @@ export function retrieveRelevantContext(query: string): string {
 
   scored.sort((a, b) => b.score - a.score);
 
-  const topMatches = scored.filter((s) => s.score > 0).slice(0, 3);
+  // Devolver únicamente los 2 mejores resultados para mantener el prompt ágil y rápido
+  const topMatches = scored.filter((s) => s.score > 2).slice(0, 2);
 
   if (topMatches.length > 0) {
     return topMatches
@@ -219,7 +220,148 @@ export function retrieveRelevantContext(query: string): string {
       .join("\n\n---\n\n");
   }
 
-  return KNOWLEDGE_BASE.slice(0, 4)
-    .map((i) => `[${i.title}]\n${i.content}`)
-    .join("\n\n---\n\n");
+  // Si no hay coincidencia temática específica, no inyectamos redundancia
+  return "";
+}
+
+export interface InstantMatchResponse {
+  reply: string;
+  needsHumanSupport: boolean;
+  supportReason?: string | null;
+  whatsappMessage?: string | null;
+}
+
+/**
+ * Coincidencia de respuestas instantáneas (0ms) para saludos, preguntas frecuentes y quick prompts
+ */
+export function findInstantResponse(query: string): InstantMatchResponse | null {
+  if (!query || typeof query !== "string") return null;
+
+  const raw = query.trim().toLowerCase();
+  const normalized = raw.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¿?¡!.,;:()]/g, "").trim();
+
+  // 1. Saludos comunes
+  const greetings = [
+    "hola", "buenas", "buenos dias", "buenas tardes", "buenas noches", "hey",
+    "hola visionweb", "que tal", "hola buenas", "saludos", "hola que tal"
+  ];
+  if (greetings.includes(normalized) || /^hola(\s+visionweb|\s+amigo)?$/.test(normalized)) {
+    return {
+      reply: "¡Hola! 👋 Es un gusto saludarte. Soy el **Asesor Virtual de VisionWeb**.\n\nPuedo responder cualquier duda al instante sobre nuestros planes, precios, metodología o explicarte términos técnicos en palabras sencillas.\n\n¿En qué tipo de página o proyecto te gustaría que te oriente hoy?",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 2. Precios / Planes
+  const pricingQueries = [
+    "cuanto cuesta una web",
+    "cuanto vale una web",
+    "cuales son los planes y precios para crear una pagina web o tienda online",
+    "precios",
+    "planes",
+    "cuanto cuesta",
+    "cuanto vale",
+    "tarifas",
+    "costos",
+    "planes y precios",
+    "precios y planes",
+    "lista de precios"
+  ];
+  if (pricingQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "¡Con gusto te explico! En VisionWeb no cobramos tarifa inicial de desarrollo (setup). Trabajamos bajo suscripción mensual fija con permanencia mínima de 6 meses y fecha de pago acordada:\n\n• **Landing Page (Página de Ventas):** **$150.000 COP al mes** (entrega en 3 a 5 días hábiles). Alta conversión para anuncios en Instagram/TikTok con botón directo a WhatsApp.\n• **Página Web Normal (Corporativa):** **$200.000 COP al mes** (entrega en 7 a 10 días hábiles). Secciones completas (Inicio, Nosotros, Servicios, Contacto) y optimización en Google (SEO).\n• **Tienda Online (E-commerce):** **$270.000 COP al mes** (entrega en 12 a 16 días hábiles). Catálogo interactivo, carrito de compras y pasarela de cobros (Nequi, Daviplata, Bancolombia, PSE y tarjetas).\n\nTodos los planes incluyen hosting cloud de alta velocidad, certificado SSL 24/7 y hasta 4 horas mensuales de soporte técnico y mantenimiento.\n\n¿Cuál de estas 3 opciones se adapta mejor a tu modelo de negocio?",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 3. Proceso de trabajo
+  const processQueries = [
+    "como es el proceso de trabajo",
+    "como es el proceso de trabajo paso a paso para hacer mi pagina web",
+    "proceso",
+    "metodologia",
+    "como trabajan",
+    "pasos para trabajar"
+  ];
+  if (processQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "Nuestro proceso de trabajo es 100% transparente y ágil en 4 sencillos pasos:\n\n1. **Paso 1 - Definición y Objetivos:** Conversamos sobre tu marca, colores, servicios y qué deseas lograr.\n2. **Paso 2 - Diseño y Maquetación:** Creamos una propuesta visual moderna enfocada en la mejor experiencia de usuario (UI/UX).\n3. **Paso 3 - Desarrollo y Conexiones:** Programamos tu sitio ultrarrápido con botones directos a tu WhatsApp, formularios y pasarelas de pago.\n4. **Paso 4 - Lanzamiento y Soporte:** Publicamos tu web con hosting cloud y certificado SSL, y te brindamos soporte mensual continuo.\n\n¿Tienes alguna idea o referencia que te gustaría desarrollar?",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 4. Tiempos de entrega
+  const deliveryQueries = [
+    "cuanto tardan en entregar",
+    "cuales son los tiempos de entrega para cada tipo de pagina web",
+    "tiempos de entrega",
+    "cuanto se demoran",
+    "tiempos",
+    "tiempo de entrega"
+  ];
+  if (deliveryQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "Nuestros tiempos de entrega oficiales son:\n\n• **Landing Page:** de **3 a 5 días hábiles**.\n• **Página Web Corporativa:** de **7 a 10 días hábiles**.\n• **Tienda Online E-commerce:** de **12 a 16 días hábiles**.\n\nPara proyectos a medida (como Portafolios UGC especiales, Linktree personalizados o sistemas ERP), el tiempo se estima según los módulos solicitados.\n\n¿Para qué fecha te gustaría tener tu sitio web al aire?",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 5. Portafolio
+  const portfolioQueries = [
+    "que proyectos tienen en el portafolio",
+    "que proyectos puedo ver en el portafolio de visionweb y como interactuo con ellos",
+    "portafolio",
+    "proyectos",
+    "ejemplos",
+    "trabajos"
+  ];
+  if (portfolioQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "¡Puedes ver y probar nuestros proyectos en vivo directamente en esta misma página!\n\n• **Sofia Cruz UGC:** Portafolio premium con videos verticales en alta definición y paquetes comerciales para creadora de contenido (puedes explorarlo en el visor interactivo).\n• **Tricom Link:** Plataforma estilo Bio-link de lujo interactiva para empresa de telecomunicaciones.\n\nTe invitamos a deslizar hacia la sección de **Proyectos Destacados** de la web para probarlos en vivo, o pregúntame si deseas algo similar para tu marca.",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 6. Dominio y Hosting
+  const technicalQueries = [
+    "que es un dominio y hosting",
+    "me puedes explicar con palabras sencillas que es un dominio hosting y certificado ssl",
+    "que es hosting",
+    "que es dominio",
+    "dominio y hosting",
+    "que es ssl"
+  ];
+  if (technicalQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "Te lo explico con una metáfora cotidiana muy sencilla:\n\n• **Dominio:** Es la placa o dirección de tu negocio en internet (ejemplo: `tumarca.com`). Cuesta aprox. $50.000 - $80.000 COP (10€ - 20€) al año y siempre queda registrado a tu nombre.\n• **Hosting (Alojamiento Cloud):** Es el terreno o local donde guardamos tus fotos, textos y base de datos para que la web funcione las 24 horas sin caerse. **¡En VisionWeb ya viene incluido en tu mensualidad!**\n• **Certificado SSL:** Es el candadito verde de seguridad que garantiza que las compras y datos de tus clientes están cifrados y protegidos.\n\nNosotros nos encargamos de toda la configuración técnica para que tú no tengas que preocuparte por nada.",
+      needsHumanSupport: false,
+      whatsappMessage: null,
+    };
+  }
+
+  // 7. Soporte Humano / WhatsApp directo
+  const supportQueries = [
+    "hablar con asesor por whatsapp",
+    "quiero hablar directamente con un asesor humano por whatsapp para una cotizacion personalizada",
+    "asesor",
+    "whatsapp",
+    "humano",
+    "contacto",
+    "hablar con asesor",
+    "hablar con alguien"
+  ];
+  if (supportQueries.some((q) => normalized === q || normalized.startsWith(q))) {
+    return {
+      reply: "¡Por supuesto! Estaremos encantados de atenderte personalmente por WhatsApp para responder tus dudas, acordar detalles de contratación o brindarte una cotización personalizada para tu negocio.\n\nPuedes hacer clic en el botón verde a continuación para iniciar el chat de inmediato:",
+      needsHumanSupport: true,
+      whatsappMessage: "Hola VisionWeb, me gustaría recibir asesoría personalizada sobre el desarrollo de una página web.",
+    };
+  }
+
+  return null;
 }

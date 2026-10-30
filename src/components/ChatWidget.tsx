@@ -12,10 +12,9 @@ import {
   ChevronDown,
   ArrowRight,
   ShieldCheck,
-  Clock,
-  Layers,
-  HelpCircle,
+  Zap,
 } from "lucide-react";
+import { findInstantResponse } from "@/lib/rag/knowledge";
 
 interface Message {
   id: string;
@@ -30,15 +29,22 @@ const QUICK_PROMPTS = [
   { label: "¿Cuánto cuesta una web?", query: "¿Cuáles son los planes y precios para crear una página web o tienda online?" },
   { label: "¿Cómo es el proceso de trabajo?", query: "¿Cómo es el proceso de trabajo paso a paso para hacer mi página web?" },
   { label: "¿Cuánto tardan en entregar?", query: "¿Cuáles son los tiempos de entrega para cada tipo de página web?" },
-  { label: "¿Qué proyectos tienen en el portafolio?", query: "¿Qué proyectos puedo ver en el portafolio de VisionWeb y cómo interactúo con ellos?" },
-  { label: "¿Qué es un dominio y hosting?", query: "¿Me puedes explicar con palabras sencillas qué es un dominio, hosting y certificado SSL?" },
+  { label: "¿Qué proyectos tienen en portafolio?", query: "¿Qué proyectos puedo ver en el portafolio de VisionWeb y cómo interactúo con ellos?" },
+  { label: "¿Qué es dominio y hosting?", query: "¿Me puedes explicar con palabras sencillas qué es un dominio, hosting y certificado SSL?" },
   { label: "Hablar con asesor por WhatsApp", query: "Quiero hablar directamente con un asesor humano por WhatsApp para una cotización personalizada." },
+];
+
+const LOADING_STATUSES = [
+  "VisionWeb IA está analizando tu consulta...",
+  "Consultando datos y planes oficiales...",
+  "Redactando respuesta...",
 ];
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [showTooltip, setShowTooltip] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -68,6 +74,27 @@ export default function ChatWidget() {
     }
   }, [isOpen, messages]);
 
+  // Ciclo dinámico de estados de carga para feedback visual en tiempo real
+  useEffect(() => {
+    if (!isLoading) {
+      setLoadingStep(0);
+      return;
+    }
+    const t1 = setTimeout(() => {
+      setLoadingStep(1);
+      scrollToBottom();
+    }, 600);
+    const t2 = setTimeout(() => {
+      setLoadingStep(2);
+      scrollToBottom();
+    }, 1500);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [isLoading]);
+
   const handleSend = async (customQuery?: string) => {
     const textToSend = customQuery || input;
     if (!textToSend.trim() || isLoading) return;
@@ -83,6 +110,25 @@ export default function ChatWidget() {
     if (!customQuery) setInput("");
     setIsLoading(true);
 
+    // 1. Detección instantánea en cliente (0ms de latencia de red, simulación de escritura 220ms)
+    const instant = findInstantResponse(textToSend.trim());
+    if (instant) {
+      setTimeout(() => {
+        const botMsg: Message = {
+          id: `bot-${Date.now()}`,
+          role: "assistant",
+          content: instant.reply,
+          needsHumanSupport: Boolean(instant.needsHumanSupport),
+          whatsappMessage: instant.whatsappMessage || textToSend,
+          timestamp: "Ahora",
+        };
+        setMessages((prev) => [...prev, botMsg]);
+        setIsLoading(false);
+      }, 220);
+      return;
+    }
+
+    // 2. Consulta ultrarrápida al backend (Gemini 3.1 Flash Lite / Caché)
     try {
       const history = [...messages, userMsg].map((m) => ({
         role: m.role,
@@ -111,7 +157,7 @@ export default function ChatWidget() {
       };
 
       setMessages((prev) => [...prev, botMsg]);
-    } catch (error) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         {
@@ -143,7 +189,6 @@ export default function ChatWidget() {
 
   // Formateador de texto y markdown limpio (sin almohadillas ### ni símbolos feos)
   const renderFormattedContent = (content: string) => {
-    // Limpiar cualquier residuo de ### o ## que pueda venir en el texto
     const cleanedContent = content.replace(/^#{1,4}\s*/gm, "");
     const paragraphs = cleanedContent.split("\n\n");
 
@@ -156,7 +201,10 @@ export default function ChatWidget() {
             if (!trimmed) return null;
 
             // Detectar viñetas
-            const isBullet = trimmed.startsWith("•") || trimmed.startsWith("-") || (trimmed.startsWith("*") && !trimmed.startsWith("**"));
+            const isBullet =
+              trimmed.startsWith("•") ||
+              trimmed.startsWith("-") ||
+              (trimmed.startsWith("*") && !trimmed.startsWith("**"));
             const cleanLine = isBullet ? trimmed.replace(/^[•\-*]\s*/, "") : trimmed;
 
             // Procesar negritas con **
@@ -191,7 +239,7 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Tooltip flotante de bienvenida (aparece sutilmente si el chat está cerrado) */}
+      {/* Tooltip flotante de bienvenida */}
       {!isOpen && showTooltip && (
         <div className="fixed bottom-24 right-5 sm:right-6 z-40 max-w-[260px] p-3 rounded-2xl bg-[#141534] text-white shadow-xl border border-white/10 animate-fade-in flex items-start gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#D5DD54] text-[#141534] flex items-center justify-center shrink-0 font-bold">
@@ -199,7 +247,9 @@ export default function ChatWidget() {
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between">
-              <span className="font-heading text-xs font-bold text-[#D5DD54]">VisionWeb IA</span>
+              <span className="font-heading text-xs font-bold text-[#D5DD54] flex items-center gap-1">
+                <Zap className="w-3 h-3 text-[#D5DD54]" /> VisionWeb IA
+              </span>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -218,7 +268,7 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* Botón Flotante Trigger (Bottom Right) */}
+      {/* Botón Flotante Trigger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat de soporte con IA"}
@@ -242,7 +292,7 @@ export default function ChatWidget() {
         )}
       </button>
 
-      {/* Ventana de Chat Modal / Sheet */}
+      {/* Ventana de Chat Modal */}
       {isOpen && (
         <div className="fixed inset-x-3 bottom-22 sm:bottom-24 sm:right-6 sm:left-auto z-50 w-auto sm:w-[410px] h-[78vh] sm:h-[590px] max-h-[85vh] flex flex-col bg-[#FBFBFA] rounded-3xl shadow-2xl border border-[#141534]/15 overflow-hidden animate-fade-in">
           {/* Header */}
@@ -256,12 +306,12 @@ export default function ChatWidget() {
                 <div className="flex items-center gap-1.5">
                   <h3 className="font-heading text-sm font-bold tracking-tight">VisionWeb IA</h3>
                   <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-medium">
-                    Asesor
+                    Respuesta rápida
                   </span>
                 </div>
                 <p className="text-[11px] text-white/70 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  En línea • Respuestas al instante
+                  En línea • Soporte inmediato
                 </p>
               </div>
             </div>
@@ -291,7 +341,7 @@ export default function ChatWidget() {
           <div className="bg-[#141534]/5 px-3 py-1.5 border-b border-[#141534]/10 flex items-center justify-between text-[11px] text-[#585A74]">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              Precios exactos sin sorpresas
+              Precios exactos sin tarifas ocultas
             </span>
             <a
               href="https://wa.me/573052311490?text=Hola%20VisionWeb,%20quisiera%20asesoria%20sobre%20una%20pagina%20web"
@@ -326,7 +376,7 @@ export default function ChatWidget() {
                     )}
                   </div>
 
-                  {/* Tarjeta de soporte humano por WhatsApp si la respuesta lo requiere */}
+                  {/* Tarjeta de soporte humano por WhatsApp */}
                   {!isUser && msg.needsHumanSupport && (
                     <div className="mt-2.5 w-full max-w-[92%] p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/30 flex flex-col gap-2">
                       <div className="flex items-center gap-2 text-emerald-800 font-medium text-xs">
@@ -334,7 +384,7 @@ export default function ChatWidget() {
                         <span>¿Prefieres atención personalizada con un asesor?</span>
                       </div>
                       <p className="text-[11px] text-[#585A74]">
-                        Nuestro equipo te dará una cotización exacta y resolverá tus dudas por WhatsApp en menos de 2 horas.
+                        Nuestro equipo resolverá tus dudas y te dará una cotización formal por WhatsApp en minutos.
                       </p>
                       <a
                         href={`https://wa.me/573052311490?text=${encodeURIComponent(
@@ -357,16 +407,18 @@ export default function ChatWidget() {
               );
             })}
 
-            {/* Typing indicator */}
+            {/* Dynamic Real-time Status Typing indicator */}
             {isLoading && (
-              <div className="flex items-start gap-2">
-                <div className="bg-white border border-[#141534]/10 rounded-2xl rounded-bl-xs px-3.5 py-2.5 shadow-sm flex items-center gap-2">
-                  <div className="flex gap-1">
-                    <span className="w-2 h-2 rounded-full bg-[#141534]/40 animate-bounce"></span>
-                    <span className="w-2 h-2 rounded-full bg-[#141534]/60 animate-bounce [animation-delay:0.2s]"></span>
-                    <span className="w-2 h-2 rounded-full bg-[#141534] animate-bounce [animation-delay:0.4s]"></span>
+              <div className="flex items-start gap-2 animate-fade-in">
+                <div className="bg-white border border-[#141534]/15 rounded-2xl rounded-bl-xs px-3.5 py-2.5 shadow-sm flex items-center gap-2.5">
+                  <div className="flex gap-1 items-center shrink-0">
+                    <span className="w-2 h-2 rounded-full bg-[#141534] animate-bounce"></span>
+                    <span className="w-2 h-2 rounded-full bg-[#141534]/70 animate-bounce [animation-delay:0.18s]"></span>
+                    <span className="w-2 h-2 rounded-full bg-[#D5DD54] animate-bounce [animation-delay:0.36s]"></span>
                   </div>
-                  <span className="text-xs text-[#585A74]">VisionWeb IA está pensando...</span>
+                  <span className="text-xs font-medium text-[#141534] transition-all duration-200">
+                    {LOADING_STATUSES[loadingStep]}
+                  </span>
                 </div>
               </div>
             )}
@@ -374,18 +426,18 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick chips (si el chat tiene pocos mensajes) */}
-          {messages.length <= 3 && !isLoading && (
+          {/* Quick chips sugerencias */}
+          {!isLoading && (
             <div className="px-3 py-2 bg-white/70 border-t border-[#141534]/5">
               <p className="text-[10px] font-mono uppercase text-[#585A74] tracking-wider mb-1.5 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-[#D5DD54]" /> Preguntas sugeridas:
+                <Sparkles className="w-3 h-3 text-[#141534]" /> Preguntas sugeridas:
               </p>
               <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-                {QUICK_PROMPTS.slice(0, 4).map((qp, idx) => (
+                {QUICK_PROMPTS.map((qp, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(qp.query)}
-                    className="shrink-0 px-2.5 py-1 rounded-full bg-[#141534]/5 hover:bg-[#141534] hover:text-white border border-[#141534]/10 text-[#141534] text-[11px] font-medium transition-all"
+                    className="shrink-0 px-2.5 py-1 rounded-full bg-[#141534]/5 hover:bg-[#141534] hover:text-white border border-[#141534]/10 text-[#141534] text-[11px] font-medium transition-all active:scale-95 cursor-pointer"
                   >
                     {qp.label}
                   </button>
@@ -416,20 +468,23 @@ export default function ChatWidget() {
                 type="submit"
                 disabled={!input.trim() || isLoading}
                 aria-label="Enviar mensaje"
-                className="w-10 h-10 rounded-xl bg-[#141534] hover:bg-[#1f2150] disabled:bg-[#141534]/20 text-[#D5DD54] disabled:text-[#141534]/40 flex items-center justify-center transition-all shrink-0 active:scale-95"
+                className="w-10 h-10 rounded-xl bg-[#141534] hover:bg-[#1f2150] disabled:bg-[#141534]/20 text-[#D5DD54] disabled:text-[#141534]/40 flex items-center justify-center transition-all shrink-0 active:scale-95 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
               </button>
             </form>
             <div className="flex items-center justify-between mt-2 px-1 text-[10px] text-[#585A74]/70">
-              <span>VisionWeb • Asistencia virtual</span>
+              <span className="flex items-center gap-1 font-medium text-[#141534]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Respuestas inmediatas
+              </span>
               <a
                 href="https://wa.me/573052311490"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#141534] font-medium transition-colors"
               >
-                Soporte WhatsApp: +57 305 231 1490
+                WhatsApp: +57 305 231 1490
               </a>
             </div>
           </div>

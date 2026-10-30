@@ -4,7 +4,7 @@
  * Runs on Cloudflare Edge Runtime with access to context.env.GEMINI_API_KEY
  */
 
-import { retrieveRelevantContext } from "../../src/lib/rag/knowledge";
+import { retrieveRelevantContext, findInstantResponse } from "../../src/lib/rag/knowledge";
 
 interface Env {
   GEMINI_API_KEY?: string;
@@ -16,10 +16,12 @@ interface ChatMessage {
   content: string;
 }
 
+// Modelos ultrarrápidos para Edge Runtime (sub-segundo a ~1.2s)
 const CANDIDATE_MODELS = [
-  "gemini-3.5-flash-lite",
-  "gemini-3.8-flash",
-  "gemini-flash-latest",
+  "gemini-3.1-flash-lite-preview",
+  "gemini-3.1-flash-lite",
+  "gemini-3.6-flash",
+  "gemini-3.5-flash",
 ];
 
 const SYSTEM_PROMPT = `Eres el Asesor Virtual Oficial de VisionWeb (estudio boutique de desarrollo web y software en Colombia).
@@ -51,24 +53,13 @@ No cobramos tarifa inicial de desarrollo o setup. El modelo es suscripción mens
    - Incluye: Hosting cloud, base de datos segura, SSL 24/7 y hasta 4 horas al mes de soporte para nuevos productos y promociones.
 
 SERVICIOS POR COTIZACIÓN PERSONALIZADA:
-- **Portafolios UGC** (para creadores de contenido).
-- **Linktree / Bio-links personalizados de lujo**.
-- **Sistemas a Medida (como ERP, gestión de inventarios o plataformas empresariales)**.
-- Para estos servicios, aclara amablemente que se manejan por **cotización directa y personalizada** según las funciones que necesite el cliente, y activa la derivación a soporte para que hablen por WhatsApp.
+- **Portafolios UGC**, **Linktree**, **Sistemas a Medida (ERP)**.
+- Se manejan por **cotización directa y personalizada**. Redirige a WhatsApp (+57 305 231 1490).
 
 CONDICIONES CLAVE Y PROPIEDAD:
 - **Fecha de pago:** Se acuerda una fecha fija de pago de cada mes.
-- **Propiedad del código:** Concluidos los 6 meses mínimos, si el cliente opta por no renovar el mantenimiento mensual, TODO el código, diseño y recursos desarrollados pasan a ser de su propiedad exclusiva, entregándosele los archivos íntegros.
-- **Gastos externos:** El dominio web (.com) cuesta aprox. $50.000 - $80.000 COP (10€ - 20€) al año y siempre queda registrado a nombre del cliente.
-
-EXPLICAR TÉRMINOS TÉCNICOS FÁCIL:
-- Si preguntan qué es hosting, dominio, SSL, responsive, etc., explícalo con metáforas cotidianas sencillas (dominio = placa de tu local, hosting = el terreno donde está construido).
-
-DERIVACIÓN A WHATSAPP:
-- Si el cliente pregunta por Portafolios UGC, Linktree, sistemas ERP, cotizaciones a medida o pide hablar con un asesor:
-  - Marca "needsHumanSupport": true.
-  - Redacta "whatsappMessage" pre-llenado con la consulta.
-  - Nuestro WhatsApp de soporte es +57 305 231 1490.
+- **Propiedad del código:** Concluidos los 6 meses mínimos, si el cliente opta por no renovar, TODO el código, diseño y recursos pasan a ser de su propiedad exclusiva.
+- **Gastos externos:** El dominio web (.com aprox. $50.000 - $80.000 COP / 10€ - 20€ al año, registrado a nombre del cliente).
 
 FORMATO DE RESPUESTA OBLIGATORIO:
 Debes responder SIEMPRE en formato JSON válido:
@@ -121,12 +112,29 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     }
 
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+
+    // 1. Detección instantánea (0ms) en el Edge
+    const instantMatch = findInstantResponse(lastUserMsg);
+    if (instantMatch) {
+      return new Response(
+        JSON.stringify({
+          reply: instantMatch.reply,
+          needsHumanSupport: instantMatch.needsHumanSupport,
+          supportReason: instantMatch.supportReason || null,
+          whatsappMessage: instantMatch.whatsappMessage || null,
+        }),
+        { status: 200, headers: corsHeaders }
+      );
+    }
+
     const ragContext = retrieveRelevantContext(lastUserMsg);
+    const enrichedSystemInstruction = ragContext
+      ? `${SYSTEM_PROMPT}\n\n=== INFORMACIÓN OFICIAL ESPECÍFICA ===\n${ragContext}`
+      : SYSTEM_PROMPT;
 
+    const recentMessages = messages.slice(-5);
     const contents: Array<{ role: "user" | "model"; parts: Array<{ text: string }> }> = [];
-    const enrichedSystemInstruction = `${SYSTEM_PROMPT}\n\n=== INFORMACIÓN OFICIAL DE VISIONWEB ===\n${ragContext}`;
 
-    const recentMessages = messages.slice(-6);
     for (const msg of recentMessages) {
       const role = msg.role === "assistant" ? "model" : "user";
       contents.push({
@@ -149,11 +157,13 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
             },
             contents,
             generationConfig: {
-              temperature: 0.5,
-              topP: 0.95,
+              temperature: 0.3,
+              topP: 0.9,
+              maxOutputTokens: 350,
               responseMimeType: "application/json",
             },
           }),
+          signal: AbortSignal.timeout(3200),
         });
 
         if (!response.ok) {
@@ -174,7 +184,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
           }
         }
       } catch {
-        // Try next candidate
+        continue;
       }
     }
 
@@ -201,7 +211,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       }),
       { status: 200, headers: corsHeaders }
     );
-  } catch (error: any) {
+  } catch {
     return new Response(
       JSON.stringify({
         reply:

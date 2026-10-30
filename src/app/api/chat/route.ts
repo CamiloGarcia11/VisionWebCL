@@ -1,16 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
-import { retrieveRelevantContext, KNOWLEDGE_BASE } from "@/lib/rag/knowledge";
+import { NextResponse } from "next/server";
+import { retrieveRelevantContext, findInstantResponse } from "@/lib/rag/knowledge";
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
   content: string;
 }
 
+// Modelos ordenados por velocidad y estabilidad (sub-segundo a ~1.2s)
 const CANDIDATE_MODELS = [
-  "gemini-3.5-flash-lite",
-  "gemini-3.8-flash",
-  "gemini-flash-latest",
+  "gemini-3.1-flash-lite-preview",
+  "gemini-3.1-flash-lite",
+  "gemini-3.6-flash",
+  "gemini-3.5-flash",
 ];
+
+// Caché en memoria para respuestas frecuentes o idénticas (TTL 30 min)
+interface CacheItem {
+  reply: string;
+  needsHumanSupport: boolean;
+  supportReason: string | null;
+  whatsappMessage: string | null;
+  timestamp: number;
+}
+const responseCache = new Map<string, CacheItem>();
+const CACHE_TTL_MS = 1000 * 60 * 30;
 
 const SYSTEM_PROMPT = `Eres el Asesor Virtual Oficial de VisionWeb (estudio boutique de desarrollo web y software en Colombia).
 Tu objetivo es asesorar a clientes potenciales con total claridad, calidez, profesionalismo y confianza, respondiendo dudas sobre nuestros precios, metodología y aspectos técnicos.
@@ -41,24 +54,13 @@ No cobramos tarifa inicial de desarrollo o setup. El modelo es suscripción mens
    - Incluye: Hosting cloud, base de datos segura, SSL 24/7 y hasta 4 horas al mes de soporte para nuevos productos y promociones.
 
 SERVICIOS POR COTIZACIÓN PERSONALIZADA:
-- **Portafolios UGC** (para creadores de contenido).
-- **Linktree / Bio-links personalizados de lujo**.
-- **Sistemas a Medida (como ERP, gestión de inventarios o plataformas empresariales)**.
-- Para estos servicios, aclara amablemente que se manejan por **cotización directa y personalizada** según las funciones que necesite el cliente, y activa la derivación a soporte para que hablen por WhatsApp.
+- **Portafolios UGC**, **Linktree personalizados**, **Sistemas a Medida (ERP)**.
+- Se manejan por **cotización directa y personalizada**. Activa la derivación a WhatsApp (+57 305 231 1490).
 
 CONDICIONES CLAVE Y PROPIEDAD:
 - **Fecha de pago:** Se acuerda una fecha fija de pago de cada mes.
-- **Propiedad del código:** Concluidos los 6 meses mínimos, si el cliente opta por no renovar el mantenimiento mensual, TODO el código, diseño y recursos desarrollados pasan a ser de su propiedad exclusiva, entregándosele los archivos íntegros.
-- **Gastos externos:** El dominio web (.com) cuesta aprox. $50.000 - $80.000 COP (10€ - 20€) al año y siempre queda registrado a nombre del cliente.
-
-EXPLICAR TÉRMINOS TÉCNICOS FÁCIL:
-- Si preguntan qué es hosting, dominio, SSL, responsive, etc., explícalo con metáforas cotidianas sencillas (dominio = placa de tu local, hosting = el terreno donde está construido).
-
-DERIVACIÓN A WHATSAPP:
-- Si el cliente pregunta por Portafolios UGC, Linktree, sistemas ERP, cotizaciones a medida o pide hablar con un asesor:
-  - Marca "needsHumanSupport": true.
-  - Redacta "whatsappMessage" pre-llenado con la consulta.
-  - Nuestro WhatsApp de soporte es +57 305 231 1490.
+- **Propiedad del código:** Concluidos los 6 meses mínimos, si el cliente no renueva, TODO el código, diseño y recursos pasan a ser de su propiedad exclusiva.
+- **Gastos externos:** Dominio web (.com aprox. $50.000 - $80.000 COP / 10€ - 20€ al año, a nombre del cliente).
 
 FORMATO DE RESPUESTA OBLIGATORIO:
 Debes responder SIEMPRE en formato JSON válido:
@@ -92,12 +94,37 @@ export async function POST(req: Request) {
     }
 
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
+    const cleanUserQuery = lastUserMsg.trim().toLowerCase();
+
+    // 1. Detección instantánea (0ms) para saludos, FAQs y quick prompts
+    const instantMatch = findInstantResponse(lastUserMsg);
+    if (instantMatch) {
+      return NextResponse.json({
+        reply: instantMatch.reply,
+        needsHumanSupport: instantMatch.needsHumanSupport,
+        supportReason: instantMatch.supportReason || null,
+        whatsappMessage: instantMatch.whatsappMessage || null,
+      });
+    }
+
+    // 2. Caché en memoria para consultas repetidas (0ms)
+    const cached = responseCache.get(cleanUserQuery);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return NextResponse.json({
+        reply: cached.reply,
+        needsHumanSupport: cached.needsHumanSupport,
+        supportReason: cached.supportReason,
+        whatsappMessage: cached.whatsappMessage,
+      });
+    }
+
     const ragContext = retrieveRelevantContext(lastUserMsg);
+    const enrichedSystemInstruction = ragContext
+      ? `${SYSTEM_PROMPT}\n\n=== INFORMACIÓN OFICIAL ESPECÍFICA ===\n${ragContext}`
+      : SYSTEM_PROMPT;
 
+    const recentMessages = messages.slice(-5);
     const contents: Array<{ role: "user" | "model"; parts: Array<{ text: string }> }> = [];
-    const enrichedSystemInstruction = `${SYSTEM_PROMPT}\n\n=== INFORMACIÓN OFICIAL DE VISIONWEB ===\n${ragContext}`;
-
-    const recentMessages = messages.slice(-6);
 
     for (const msg of recentMessages) {
       const role = msg.role === "assistant" ? "model" : "user";
@@ -107,8 +134,9 @@ export async function POST(req: Request) {
       });
     }
 
-    let geminiResponseJson = null;
+    let geminiResponseJson: any = null;
 
+    // Probar candidatos rápidos con timeout estricto de 3.2s para evitar cualquier cuelgue
     for (const model of CANDIDATE_MODELS) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -121,11 +149,13 @@ export async function POST(req: Request) {
             },
             contents,
             generationConfig: {
-              temperature: 0.5,
-              topP: 0.95,
+              temperature: 0.3,
+              topP: 0.9,
+              maxOutputTokens: 350,
               responseMimeType: "application/json",
             },
           }),
+          signal: AbortSignal.timeout(3200),
         });
 
         if (!response.ok) {
@@ -146,32 +176,42 @@ export async function POST(req: Request) {
           }
         }
       } catch {
-        // Continue to next candidate
+        // Fallover inmediato al siguiente candidato rápido sin bloquear al usuario
+        continue;
       }
     }
 
     if (geminiResponseJson && geminiResponseJson.reply) {
-      return NextResponse.json({
+      const result = {
         reply: geminiResponseJson.reply,
         needsHumanSupport: Boolean(geminiResponseJson.needsHumanSupport),
         supportReason: geminiResponseJson.supportReason || null,
         whatsappMessage:
           geminiResponseJson.whatsappMessage ||
           `Hola VisionWeb, tengo una consulta sobre: "${lastUserMsg.slice(0, 80)}"`,
+      };
+
+      // Guardar en caché para futuras consultas idénticas
+      responseCache.set(cleanUserQuery, {
+        ...result,
+        timestamp: Date.now(),
       });
+
+      return NextResponse.json(result);
     }
 
+    // Respuesta segura de respaldo rápido con información clave
     return NextResponse.json({
       reply:
-        "¡Hola! Con gusto te oriento. En VisionWeb creamos páginas web de ventas ($150.000 COP/mes), sitios corporativos ($200.000 COP/mes) y tiendas online ($270.000 COP/mes) con contrato mínimo de 6 meses y soporte mensual incluido. Para portafolios UGC, Linktree o sistemas ERP te damos cotización personalizada.",
+        "¡Hola! Con gusto te oriento. En VisionWeb creamos páginas web de ventas ($150.000 COP/mes), sitios corporativos ($200.000 COP/mes) y tiendas online ($270.000 COP/mes) con permanencia mínima de 6 meses y soporte mensual incluido. Para portafolios UGC, Linktree o sistemas ERP te damos cotización personalizada.",
       needsHumanSupport: true,
       whatsappMessage: `Hola VisionWeb, me gustaría recibir asesoría sobre: ${lastUserMsg.slice(0, 80)}`,
     });
-  } catch (error: any) {
+  } catch {
     return NextResponse.json(
       {
         reply:
-          "Ocurrió una intermitencia momentánea. Si deseas atención inmediata, por favor contáctanos directamente a nuestro WhatsApp oficial.",
+          "Ocurrió una intermitencia momentánea de red. Si deseas atención inmediata, por favor contáctanos directamente a nuestro WhatsApp oficial.",
         needsHumanSupport: true,
         whatsappMessage: "Hola VisionWeb, me gustaría consultar información sobre el desarrollo de una página web.",
       },
