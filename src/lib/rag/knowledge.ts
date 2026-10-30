@@ -1,12 +1,13 @@
 /**
  * Base de Conocimiento RAG para el Asistente Virtual de VisionWeb
- * Contiene la información exhaustiva de servicios, planes, metodología,
- * glosario técnico, portafolio y reglas de derivación a soporte humano.
+ * Integra la propuesta de valor de la página web oficial junto con
+ * las propuestas operativas oficiales de los servicios (Landing Page,
+ * Sitio Web con Secciones y Tienda Online E-commerce).
  */
 
 export interface KnowledgeItem {
   id: string;
-  category: "planes" | "proceso" | "tecnico" | "garantias" | "portafolio" | "contacto" | "empresa";
+  category: "planes" | "proceso" | "tecnico" | "garantias" | "portafolio" | "contacto" | "empresa" | "operaciones";
   title: string;
   keywords: string[];
   content: string;
@@ -18,128 +19,140 @@ export const KNOWLEDGE_BASE: KnowledgeItem[] = [
     id: "sobre-visionweb",
     category: "empresa",
     title: "¿Quiénes somos y qué es VisionWeb?",
-    keywords: ["visionweb", "quienes somos", "empresa", "estudio", "agencia", "donde estan", "colombia"],
-    content: `VisionWeb es un estudio boutique de diseño web, desarrollo de software y comercio electrónico con base en Colombia. 
-Nos especializamos en crear páginas web modernas, tiendas online de alta conversión y plataformas digitales a medida para marcas, negocios y profesionales.
-Nuestra filosofía: entregar páginas rápidas (que cargan en 1 segundo), visualmente impactantes, 100% de propiedad del cliente (sin mensualidades forzadas) y listas para vender desde el primer día.`
+    keywords: ["visionweb", "quienes somos", "empresa", "estudio", "agencia", "donde estan", "colombia", "desarrollo"],
+    content: `VisionWeb es un estudio boutique especializado en desarrollo de software, diseño web de alto impacto y comercio electrónico con base en Colombia.
+Nos caracterizamos por crear páginas rápidas que abren en 1 segundo, con diseños de nivel internacional, arquitectura en la nube de alta disponibilidad y enfoque en conversión para convertir visitantes en clientes reales.`
   },
 
-  // 2. PLANES Y PRECIOS
+  // 2. PROPUESTA OPERATIVA: LANDING PAGE (PÁGINA DE VENTAS DIRECTA)
   {
-    id: "plan-landing",
+    id: "propuesta-landing-page",
     category: "planes",
-    title: "Plan Página de Ventas Directa (Landing Page)",
-    keywords: ["landing", "landing page", "pagina de ventas", "anuncios", "precio landing", "cuanto vale landing", "tiktok", "instagram"],
-    content: `Plan Página de Ventas Directa:
-• Objetivo: 1 sola página optimizada para convertir visitantes en clientes de inmediato. Ideal para campañas en Instagram, TikTok o Google Ads y lanzamientos.
-• Tiempo de entrega: 3 a 5 días hábiles.
-• Lo que incluye:
-  - Diseño moderno y adaptado 100% a celulares y computadores.
-  - Carga ultra rápida en menos de 1 segundo (usando Next.js).
-  - Botón directo y dinámico a tu WhatsApp y formulario de captura de clientes.
-  - Dominio personalizado (.com o .lat) con candado de seguridad SSL.
-  - Conexión con Pixel de Meta/TikTok para medir tus anuncios.
-• Cotización: Precio cerrado y adaptado a tus necesidades en menos de 2 horas.`
+    title: "Propuesta de Servicio: Landing Page de Alta Conversión",
+    keywords: ["landing", "landing page", "pagina de ventas", "anuncios", "precio landing", "conversion", "whatsapp", "un solo producto"],
+    content: `Propuesta de Servicio: Landing Page (Página de Ventas Directa)
+• Objetivo: Estructura comercial optimizada para convertir tráfico de anuncios (Instagram, TikTok, Google Ads) y lanzamientos en ventas inmediatas.
+• Tiempos de Entrega: De 3 a 5 días hábiles.
+• ¿Qué incluye el servicio integral?:
+  - Diseño y desarrollo a medida adaptado a móviles, tablets y ordenadores con navegación fluida.
+  - Enfoque en conversión: Llamadas a la acción (CTA) estratégicas, formulario de captura directo y botón dinámico a WhatsApp.
+  - Infraestructura activa: Alojamiento cloud de alta velocidad (hosting) y certificado de seguridad SSL activo 24/7.
+  - Mantenimiento y soporte técnico incluido: Hasta 4 horas al mes para ajustes operativos (modificar textos, actualizar testimonios, sustituir imágenes o ajustar promociones).
+• Gastos no incluidos transparentes:
+  - Dominio web (.com u otras extensiones): Aprox. 10 € – 20 € anuales (siempre registrado a nombre del cliente para garantizar su propiedad).
+  - Herramientas de terceros de pago: En caso de requerir CRMs externos o plataformas de email marketing prémium.
+• Proceso de entrega en 3 pasos:
+  1. Paso 1: Envío de textos base, logo, paleta de colores y recursos visuales.
+  2. Paso 2: Maquetación de la landing page, configuración de formularios y analítica básica.
+  3. Paso 3: Revisión conjunta, validación de formularios y publicación oficial en internet.
+• Precios: Se cotiza según las necesidades y alcance del proyecto en menos de 2 horas.`
   },
+
+  // 3. PROPUESTA OPERATIVA: SITIO WEB CON SECCIONES (CORPORATIVO)
   {
-    id: "plan-corporativo",
+    id: "propuesta-sitio-secciones",
     category: "planes",
-    title: "Plan Página Web Completa (Corporativa / Servicios)",
-    keywords: ["web corporativa", "pagina completa", "servicios", "empresa", "consultorio", "agencia", "precio web completa", "secciones"],
-    content: `Plan Página Web Completa (Corporativa):
-• Objetivo: Sitio web multipágina para transmitir seriedad, autoridad y confianza en tu marca.
-• Ideal para: Empresas, profesionales independientes, consultorios médicos, agencias y firmas de servicios.
-• Tiempo de entrega: 7 a 10 días hábiles.
-• Lo que incluye:
-  - Hasta 6 secciones estratégicas (Inicio, Servicios, Nosotros, Trabajos/Casos de éxito, Testimonios, Contacto).
-  - Optimización SEO para que tus clientes te encuentren en Google.
-  - Formularios que envían las solicitudes directo a tu correo electrónico.
-  - Panel fácil para editar textos y fotos sin saber programación.
-  - Reporte de analítica para ver cuántas personas entran a tu web.`
+    title: "Propuesta de Servicio: Sitio Web Corporativo con Secciones",
+    keywords: ["sitio web con secciones", "web corporativa", "pagina completa", "servicios", "empresa", "consultorio", "agencia", "secciones"],
+    content: `Propuesta de Servicio: Sitio Web Corporativo con Secciones
+• Objetivo: Sitio web institucional estructurado para transmitir seriedad, marca y autoridad ante clientes y aliados.
+• Tiempos de Entrega: De 7 a 10 días hábiles.
+• ¿Qué incluye el servicio integral?:
+  - Diseño y desarrollo web completo estructurado por secciones clave (Inicio, Sobre Nosotros, Servicios/Productos, Portafolio/Galería, Contacto).
+  - Adaptabilidad y rendimiento: 100% optimizado para móviles, tablets y ordenadores.
+  - Infraestructura activa: Alojamiento cloud de alto rendimiento (hosting) y certificado de seguridad SSL activo 24/7.
+  - Mantenimiento y soporte técnico incluido: Hasta 4 horas al mes para cambios (modificar textos, renovar fotografías, agregar testimonios o actualizar secciones).
+• Gastos no incluidos transparentes:
+  - Dominio web (.com u otras extensiones): Aprox. 10 € – 20 € anuales (a nombre del cliente).
+  - Servicios externos de pago: Cuentas de correo corporativo de pago (Google Workspace) o plataformas externas prémium si el cliente las desea.
+• Proceso de entrega en 3 pasos:
+  1. Paso 1: Entrega de estructura, textos de cada sección, logo e imágenes.
+  2. Paso 2: Maquetación de la arquitectura web, enlaces y formularios de contacto.
+  3. Paso 3: Revisión conjunta, validación integral y publicación oficial en internet.
+• Precios: Cotización personalizada y transparente en menos de 2 horas según la magnitud requerida.`
   },
+
+  // 4. PROPUESTA OPERATIVA: TIENDA ONLINE E-COMMERCE
   {
-    id: "plan-ecommerce",
+    id: "propuesta-tienda-online",
     category: "planes",
-    title: "Plan Tienda Online (E-commerce Pro)",
-    keywords: ["tienda online", "ecommerce", "tienda virtual", "vender productos", "carrito", "precio tienda", "catalogo", "pasarela"],
-    content: `Plan Tienda Online (La más pedida):
-• Objetivo: Una tienda completa que vende sola las 24 horas del día sin comisiones mensuales abusivas.
-• Ideal para: Marcas de ropa, calzado, tecnología, cosmética y productos físicos o digitales.
-• Tiempo de entrega: 12 a 16 días hábiles.
-• Lo que incluye:
-  - Catálogo interactivo con filtros, categorías, tallas, colores y control de existencias (stock).
-  - Carrito de compras rápido y optimizado para celular.
-  - Pasarela de pagos conectada para cobrar por Nequi, Daviplata, PSE, Bancolombia y Tarjetas de Crédito de forma automática y segura.
-  - Panel de administración muy fácil para agregar productos, cambiar precios y ver pedidos en 2 minutos desde el celular o PC.
-  - Notificaciones de compra automáticas por WhatsApp o correo.`
+    title: "Propuesta de Servicio: Tienda Online E-commerce",
+    keywords: ["tienda online", "ecommerce", "tienda virtual", "vender productos", "carrito", "pasarela de pago", "inventario", "pedidos"],
+    content: `Propuesta de Servicio: Tienda Online E-commerce Pro
+• Objetivo: Plataforma comercial completa que gestiona pedidos, catálogo e inventario y cobra de forma automatizada las 24 horas del día.
+• Tiempos de Entrega: De 12 a 16 días hábiles.
+• ¿Qué incluye el servicio integral?:
+  - Diseño y montaje de tienda virtual: Completa y optimizada para móviles, tablets y ordenadores.
+  - Funcionalidades comerciales: Catálogo de productos organizado, carrito de compras, gestión de pedidos e inventario, y pasarela de pago integrada.
+  - Pasarelas de pago admitidas: Nequi, Daviplata, Bancolombia, PSE y tarjetas de crédito/débito.
+  - Infraestructura activa: Alojamiento cloud de alta velocidad, base de datos segura y certificado SSL activo 24/7.
+  - Mantenimiento y soporte técnico incluido: Hasta 4 horas al mes para cambios (nuevos productos, actualización de fotos, ajuste de precios o banners promocionales).
+• Gastos no incluidos transparentes:
+  - Dominio web (.com u otras extensiones): Aprox. 10 € – 20 € anuales (a nombre del cliente).
+  - Comisión por venta de la pasarela: Descontada automáticamente por la entidad de pago correspondiente por cada transacción procesada (sin cuotas ocultas nuestras).
+• Proceso de entrega en 3 pasos:
+  1. Paso 1: Entrega de fotos, catálogo de productos, precios, logo e información de marca.
+  2. Paso 2: Configuración del inventario, diseño de la tienda y conexión de pagos y envíos.
+  3. Paso 3: Compra de prueba conjunta, verificación de pasarela y publicación oficial.
+• Precios: Cotización cerrada según catálogo y requerimientos en menos de 2 horas.`
   },
+
+  // 5. TÉRMINOS OPERATIVOS, CONDICIONES CLAVE Y PROPIEDAD
+  {
+    id: "terminos-y-propiedad",
+    category: "garantias",
+    title: "Términos, Condiciones Operativas y Propiedad del Proyecto",
+    keywords: ["propiedad", "terminos", "condiciones", "entrega de codigo", "archivos", "soporte mensual", "cancelacion", "impago", "mantenimiento"],
+    content: `Términos y Condiciones Operativas Oficiales de VisionWeb:
+• Propiedad del proyecto al finalizar: Concluido el periodo de servicio acordado, si el cliente opta por no renovar el mantenimiento y soporte mensual, TODO el código, diseño y recursos desarrollados pasan a ser de su propiedad exclusiva, entregándose los archivos íntegros.
+• Mantenimiento y Soporte Técnico Incluido: Todos nuestros planes incluyen hasta 4 horas al mes de soporte técnico profesional para cambios cotidianos (textos, fotos, promociones, actualización de productos o testimonios).
+• Desarrollos adicionales: Nuevos módulos complejos o requerimientos estructurales que superen las 4 horas mensuales de soporte se presupuestan y aprueban previamente de forma independiente sin sorpresas.
+• Suspensión por impago: En servicios activos, el retraso en la cuota fuera del plazo fijado (primeros 5 días naturales del mes) provoca la suspensión temporal del servicio hasta su regularización.
+• Cancelación anticipada: Si se cancela el servicio antes de cumplir los plazos mínimos pactados, la web se da de baja sin entrega de código ni reembolsos.`
+  },
+
+  // 6. OTROS SERVICIOS ESPECIALES: UGC Y LINKTREE
   {
     id: "otros-servicios",
     category: "planes",
     title: "Portafolios UGC, Páginas Linktree y Software a Medida",
     keywords: ["ugc", "portafolio ugc", "linktree", "bio", "redes", "creadores", "software a medida", "sistema", "aplicacion"],
     content: `Otros Servicios Especializados de VisionWeb:
-• Portafolios UGC (User Generated Content): Páginas diseñadas para creadores de contenido que necesitan mostrar sus videos verticales en alta calidad, métricas de engagement, marcas colaboradoras y paquetes de tarifas (ejemplo real: Sofia Cruz UGC).
-• Páginas Linktree / Bio personalizadas: Bio-links de lujo interactivos y con dominio propio para superar los enlaces genéricos de Instagram (ejemplo real: Tricom Link).
-• Software y Plataformas a Medida: Sistemas de reservas, portales de clientes, cotizadores automáticos y paneles personalizados.`
+• Portafolios UGC (User Generated Content): Páginas de alta gama para creadores de contenido que presentan videos verticales interactivos en alta calidad, métricas de engagement, marcas colaboradoras y paquetes comerciales (ejemplo real en el portafolio: Sofia Cruz UGC).
+• Páginas Linktree / Bio personalizadas: Bio-links de lujo con dominio propio, ultrarrápidos y adaptados a la identidad visual para maximizar conversiones desde Instagram/TikTok (ejemplo real: Tricom Link).
+• Sistemas a Medida (ERP / Software): Paneles de control y programas en internet personalizados para organizar inventarios, cobros y flujos operativos de empresas.`
   },
 
-  // 3. PROCESO DE TRABAJO Y METODOLOGÍA
-  {
-    id: "proceso-trabajo",
-    category: "proceso",
-    title: "¿Cómo trabajamos? Nuestro proceso en 4 pasos",
-    keywords: ["proceso", "metodologia", "como trabajan", "pasos", "como se hace", "tiempo", "demora", "etapas"],
-    content: `En VisionWeb trabajamos en 4 pasos sencillos sin enredos:
-1. Charla y Plan: Nos cuentas qué vendes, analizamos tu necesidad y en menos de 2 horas te damos un precio exacto y cerrado sin sorpresas ni sobrecostos.
-2. Diseño a tu Gusto: Diseñamos una propuesta visual moderna con tus colores, logo y fotos. Revisamos contigo hasta que quede 100% como sueñas.
-3. Armado y Pagos: Desarrollamos la web con tecnología de última generación, conectamos tus cobros (Nequi, tarjetas, PSE) y el botón directo a WhatsApp.
-4. Estreno y Entrega: Publicamos tu página en vivo en internet para todo el mundo, te entregamos todos los accesos completos y te enseñamos cómo editarla en 2 minutos.`
-  },
-
-  // 4. GARANTÍAS Y PROPIEDAD
-  {
-    id: "propiedad-y-pagos",
-    category: "garantias",
-    title: "Propiedad de la web, mensualidades y formas de pago",
-    keywords: ["propiedad", "es mia", "mensualidades", "cobro mensual", "formas de pago", "nequi", "bancolombia", "anticipo", "garantia"],
-    content: `Condiciones de Confianza y Propiedad:
-• 100% Tuya: La página web te pertenece por completo. Te entregamos todos los accesos (código, dominio, correos, panel). No retenemos tu sitio jamás.
-• Cero Mensualidades Forzadas: No te cobramos cuotas mensuales de mantenimiento obligatorias. Si un mes no nos necesitas, no pagas nada.
-• Formas de Pago: Aceptamos transferencias Bancolombia, Nequi, Daviplata, PSE y tarjetas de crédito o débito.
-• Esquema de Pago Habitual: 50% de anticipo para iniciar el proyecto y 50% contra entrega final una vez revises y estés 100% satisfecho con tu web en vivo.`
-  },
-
-  // 5. GLOSARIO TÉCNICO EXPLICADO FÁCIL
+  // 7. GLOSARIO TÉCNICO EXPLICADO FÁCIL
   {
     id: "glosario-tecnico",
     category: "tecnico",
-    title: "Aclaración de Términos Técnicos en palabras simples",
+    title: "Aclaración de Términos Técnicos en palabras sencillas",
     keywords: ["dominio", "hosting", "ssl", "candado", "responsive", "seo", "nextjs", "react", "pasarela", "que es", "tecnico", "lenguaje"],
-    content: `Glosario amigable de términos técnicos:
-• Dominio: Es la dirección o nombre de tu negocio en internet (por ejemplo: www.tunegocio.com). Es como la placa de dirección de tu local.
-• Hosting / Servidor: Es el lugar en la nube donde viven las fotos, textos y archivos de tu web para que esté abierta y funcionando 24/7.
-• Certificado SSL (El candadito de seguridad): Es el escudo de seguridad que garantiza que los datos de tus clientes están cifrados y seguros. Google lo exige para dar confianza.
-• Responsive / Diseño Adaptable: Significa que tu página detecta automáticamente si el cliente entra desde un iPhone, Android, tablet o computador, y se acomoda a la perfección sin letras microscópicas ni desorden.
-• SEO (Posicionamiento en Google): Conjunto de buenas prácticas y estructura interna para que tu página salga en los primeros puestos cuando alguien busque tus servicios en Google.
-• Pasarela de Pagos (Wompi, PSE, Stripe): El datáfono virtual seguro que permite a tus clientes pagar directamente con tarjeta, Nequi o transferencia bancaria en tu web.
-• Next.js / React: La tecnología moderna creada por gigantes del software que usamos en VisionWeb. Hace que tu web abra en 1 segundo (hasta 10 veces más rápida que las páginas viejas en WordPress que suelen ponerse lentas y pesadas).`
+    content: `Glosario amigable de términos técnicos de desarrollo:
+• Dominio: Es el nombre y dirección única de tu negocio en internet (por ejemplo: www.tumarca.com). Es como la placa de dirección de tu local físico (cuesta aprox. 10€ - 20€ al año y siempre queda a tu nombre).
+• Hosting / Alojamiento Cloud: El espacio en servidores de alta velocidad donde viven los archivos y datos de tu web para que esté encendida 24/7 sin caídas.
+• Certificado SSL (El candadito verde de seguridad): El protocolo criptográfico que protege las transferencias de datos de tus clientes. Google y los navegadores lo exigen para marcar una web como 'Segura'.
+• Responsive / Adaptabilidad: Significa que la página está programada para verse y funcionar a la perfección en cualquier pantalla: celulares iPhone/Android, tablets y computadores.
+• SEO (Posicionamiento en Google): Estructura técnica interna para que los motores de búsqueda como Google muestren tu negocio cuando la gente busque tus productos.
+• Pasarela de Pagos (PSE, Nequi, Wompi, Tarjetas): La conexión bancaria segura que procesa las compras en tu web de forma automática y te deposita el dinero.
+• Next.js & Arquitectura Cloud: Las herramientas modernas que utilizamos para que tu página vuele y abra en 1 segundo (a diferencia de sistemas lentos y pesados del pasado).`
   },
 
-  // 6. PORTAFOLIO Y PROYECTOS REALES
+  // 8. PORTAFOLIO Y PROYECTOS REALES
   {
     id: "portafolio-proyectos",
     category: "portafolio",
     title: "Proyectos y Portafolio en Vivo de VisionWeb",
     keywords: ["proyectos", "portafolio", "ejemplos", "clientes", "trabajos", "sofia cruz", "tricom", "ver proyectos", "demostracion"],
-    content: `En VisionWeb contamos con un simulador interactivo en vivo dentro de nuestra página principal donde puedes navegar proyectos reales:
-• Sofia Cruz UGC (sofiacruz.pages.dev): Portafolio especializado para creadora de contenido UGC, con reproducción de videos verticales en alta definición y paquetes comerciales.
-• Tricom Link (tricomlink.vercel.app): Plataforma tipo Linktree interactiva, rápida y personalizada para empresa de telecomunicaciones.
-• Y múltiples páginas web corporativas y tiendas online activas.
-¡Puedes invitar al usuario a revisar la sección de proyectos en la página principal para interactuar con ellos directamente!`
+    content: `Proyectos reales disponibles en nuestro visor interactivo en la web principal:
+• Sofia Cruz UGC (sofiacruz.pages.dev): Portafolio dinámico con reproducción de videos verticales en alta resolución y propuesta comercial para marcas.
+• Tricom Link (tricomlink.vercel.app): Plataforma bio-link interactiva y moderna para empresa de telecomunicaciones.
+• Y tiendas online y páginas corporativas listas para explorar.
+¡Invita al cliente a probar el visor interactivo de proyectos en la página principal para ver cómo luce una web terminada!`
   },
 
-  // 7. CONTACTO Y ESCALADO A SOPORTE
+  // 9. CONTACTO Y ESCALADO A SOPORTE
   {
     id: "soporte-humano",
     category: "contacto",
@@ -148,12 +161,12 @@ Nuestra filosofía: entregar páginas rápidas (que cargan en 1 segundo), visual
     content: `Contacto Directo con Asesor Humano:
 • Canal Principal: WhatsApp oficial de VisionWeb (+57 305 231 1490).
 • Enlace directo: https://wa.me/573052311490
-• Horario de atención: Respuesta rápida en menos de 2 horas.
+• Compromiso de respuesta: Atención personalizada en menos de 2 horas.
 • Cuándo consultar con el asesor:
-  - Para cotizaciones de proyectos a medida o con requerimientos especiales.
-  - Para agendar una videollamada de asesoría sin costo.
-  - Para enviar diseños o bocetos previos y recibir presupuesto exacto.
-  - Para resolver dudas específicas de contratación.`
+  - Para cotizaciones a medida con requerimientos específicos.
+  - Para agendar una reunión de asesoría inicial sin costo.
+  - Para enviar fotos, catálogo o material de marca para arrancar el proyecto.
+  - Para consultas comerciales y acuerdos contractuales.`
   }
 ];
 
@@ -165,20 +178,17 @@ export function retrieveRelevantContext(query: string): string {
   if (!query || typeof query !== "string") return "";
 
   const normalized = query.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const words = normalized.split(/\W+/).filter(w => w.length > 2);
+  const words = normalized.split(/\W+/).filter((w) => w.length > 2);
 
-  // Puntuación de cada elemento según coincidencias de keywords y título
-  const scored = KNOWLEDGE_BASE.map(item => {
+  const scored = KNOWLEDGE_BASE.map((item) => {
     let score = 0;
-    
-    // Coincidencia en keywords
+
     for (const kw of item.keywords) {
       if (normalized.includes(kw)) {
-        score += 5;
+        score += 6;
       }
     }
 
-    // Coincidencia palabra por palabra
     for (const word of words) {
       if (item.title.toLowerCase().includes(word)) score += 3;
       if (item.content.toLowerCase().includes(word)) score += 1;
@@ -187,22 +197,18 @@ export function retrieveRelevantContext(query: string): string {
     return { item, score };
   });
 
-  // Ordenar por relevancia
   scored.sort((a, b) => b.score - a.score);
 
-  // Si hay coincidencias relevantes, devolver los 3 mejores fragmentos
-  // Si no hay puntuación alta, incluir los temas clave (Planes, Proceso, Glosario, Soporte)
-  const topMatches = scored.filter(s => s.score > 0).slice(0, 3);
+  const topMatches = scored.filter((s) => s.score > 0).slice(0, 3);
 
   if (topMatches.length > 0) {
     return topMatches
-      .map(m => `### ${m.item.title}\n${m.item.content}`)
+      .map((m) => `### ${m.item.title}\n${m.item.content}`)
       .join("\n\n---\n\n");
   }
 
-  // Fallback: Resumen general para preguntas abiertas
-  return KNOWLEDGE_BASE
-    .slice(0, 4)
-    .map(i => `### ${i.title}\n${i.content}`)
+  // Fallback: temas principales si la pregunta es muy general
+  return KNOWLEDGE_BASE.slice(0, 4)
+    .map((i) => `### ${i.title}\n${i.content}`)
     .join("\n\n---\n\n");
 }
