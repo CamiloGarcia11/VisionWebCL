@@ -247,8 +247,8 @@ export default function ChatWidget() {
               <div>
                 <div className="flex items-center gap-1.5">
                   <h3 className="font-heading text-sm font-bold tracking-tight">VisionWeb IA</h3>
-                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-[#D5DD54] text-[#141534] font-bold">
-                    RAG
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-medium">
+                    Asesor
                   </span>
                 </div>
                 <p className="text-[11px] text-white/70 flex items-center gap-1">
@@ -414,7 +414,7 @@ export default function ChatWidget() {
               </button>
             </form>
             <div className="flex items-center justify-between mt-2 px-1 text-[10px] text-[#585A74]/70">
-              <span>VisionWeb AI • Respuestas con RAG</span>
+              <span>VisionWeb • Asistencia virtual</span>
               <a
                 href="https://wa.me/573052311490"
                 target="_blank"
