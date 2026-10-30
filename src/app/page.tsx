@@ -12,6 +12,7 @@ import ContactFunnel from "@/components/ContactFunnel";
 import FaqSection from "@/components/FaqSection";
 import Footer from "@/components/Footer";
 import QuickStartModal from "@/components/QuickStartModal";
+import ChatWidget from "@/components/ChatWidget";
 import { DEVELOPMENT_PLANS, DevelopmentPlan } from "@/constants/plans";
 
 export default function Home() {
@@ -71,6 +72,9 @@ export default function Home() {
         selectedPlan={selectedPlan}
         onSelectPlan={(plan) => setSelectedPlan(plan)}
       />
+
+      {/* Floating AI RAG Chatbot & Support Widget */}
+      <ChatWidget />
     </main>
   );
 }
