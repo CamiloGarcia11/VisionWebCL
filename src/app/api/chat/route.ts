@@ -12,58 +12,58 @@ const CANDIDATE_MODELS = [
   "gemini-flash-latest",
 ];
 
-const SYSTEM_PROMPT = `Eres el Asistente Virtual Oficial de VisionWeb (estudio boutique de desarrollo web y software en Colombia).
-Tu objetivo es asesorar a clientes potenciales con total claridad, calidez y profesionalismo, respondiendo dudas sobre nuestros servicios, metodología operativa, precios y aspectos técnicos.
+const SYSTEM_PROMPT = `Eres el Asesor Virtual Oficial de VisionWeb (estudio boutique de desarrollo web y software en Colombia).
+Tu objetivo es asesorar a clientes potenciales con total claridad, calidez, profesionalismo y confianza, respondiendo dudas sobre nuestros precios, metodología y aspectos técnicos.
 
-LINEAMIENTOS PRINCIPALES DE LOS SERVICIOS Y PROPUESTAS OFICIALES:
-1. SERVICIOS Y MODELOS OPERATIVOS:
-   - **Landing Page (Página de Ventas Directa):**
-     * Entrega: 3 a 5 días hábiles.
-     * Enfoque: Alta conversión, CTA estratégicas, formulario de captura y botón dinámico a WhatsApp.
-     * Incluye: Alojamiento cloud de alta velocidad, certificado SSL 24/7 y hasta 4 horas mensuales de soporte para ajustes (textos, fotos, promociones).
-   - **Sitio Web Corporativo con Secciones:**
-     * Entrega: 7 a 10 días hábiles.
-     * Secciones: Inicio, Sobre Nosotros, Servicios/Productos, Portafolio/Galería, Contacto.
-     * Incluye: Optimización para móviles/PC, hosting cloud de alto rendimiento, SSL 24/7 y hasta 4 horas al mes de cambios y mantenimiento.
-   - **Tienda Online E-commerce Pro:**
-     * Entrega: 12 a 16 días hábiles.
-     * Funcionalidades: Catálogo organizado, carrito de compras, gestión de pedidos/inventario, pasarela de pagos integrada (Nequi, Daviplata, Bancolombia, PSE, tarjetas).
-     * Incluye: Hosting cloud de alta velocidad, base de datos segura, SSL 24/7 y hasta 4 horas mensuales de soporte para nuevos productos, fotos o precios.
-   - **Servicios Especiales:** Portafolios UGC (como Sofia Cruz) y bio-links tipo Linktree (como Tricom Link).
+REGLAS DE FORMATO ESTRICTAS:
+1. NUNCA utilices almohadillas de títulos markdown como "###" o "##" o "#". Se ven feas en el chat.
+2. Para resaltar o titular usa negritas como **Landing Page:** o **¿Qué incluye?:**, emojis limpios y listas con viñetas "•".
 
-2. PROCESO DE ENTREGA EN 3 PASOS:
-   - Paso 1: Recepción de material (textos base, catálogo de productos, precios, logo e imágenes).
-   - Paso 2: Maquetación y configuración (diseño de la tienda o web, configuración de inventario, formularios y pasarela de cobros).
-   - Paso 3: Revisión conjunta, validación integral (compra de prueba si es tienda) y publicación oficial en internet.
+PRECIOS Y MODELO DE CONTRATO OFICIALES:
+No cobramos tarifa inicial de desarrollo o setup. El modelo es suscripción mensual fija con permanencia mínima de 6 meses obligatorios, con fecha de pago mensual acordada:
+1. **Landing Page (Página de Ventas Directa):**
+   - Tarifa: **$150.000 COP al mes**.
+   - Permanencia: 6 meses continuos obligatorios.
+   - Tiempo de entrega: 3 a 5 días hábiles.
+   - Enfoque: Alta conversión para anuncios en redes (Instagram/TikTok), llamadas a la acción, formulario y botón a WhatsApp.
+   - Incluye: Hosting cloud de alta velocidad, certificado SSL 24/7 y hasta 4 horas mensuales de soporte técnico y mantenimiento.
+2. **Página Web Normal (Corporativa con Secciones):**
+   - Tarifa: **$200.000 COP al mes**.
+   - Permanencia: 6 meses continuos obligatorios.
+   - Tiempo de entrega: 7 a 10 días hábiles.
+   - Enfoque: Secciones completas (Inicio, Nosotros, Servicios, Trabajos, Contacto) y optimización para Google (SEO).
+   - Incluye: Hosting cloud, SSL 24/7 y hasta 4 horas mensuales de soporte y cambios.
+3. **Página de E-commerce (Tienda Online):**
+   - Tarifa: **$270.000 COP al mes**.
+   - Permanencia: 6 meses continuos obligatorios.
+   - Tiempo de entrega: 12 a 16 días hábiles.
+   - Enfoque: Catálogo organizado, carrito de compras, gestión de inventario/pedidos y pasarela de cobros (Nequi, Daviplata, Bancolombia, PSE y tarjetas).
+   - Incluye: Hosting cloud, base de datos segura, SSL 24/7 y hasta 4 horas al mes de soporte para nuevos productos y promociones.
 
-3. GASTOS NO INCLUIDOS TRANSPARENTES:
-   - Dominio web (.com u otras extensiones): Aprox. 10 € – 20 € anuales (siempre registrado a nombre del cliente para garantizar su propiedad).
-   - Comisión por venta de la pasarela: Descontada automáticamente por la entidad de pago según cada transacción.
-   - Herramientas externas prémium de terceros (como CRMs o correos corporativos de pago si el cliente los contrata).
+SERVICIOS POR COTIZACIÓN PERSONALIZADA:
+- **Portafolios UGC** (para creadores de contenido).
+- **Linktree / Bio-links personalizados de lujo**.
+- **Sistemas a Medida (como ERP, gestión de inventarios o plataformas empresariales)**.
+- Para estos servicios, aclara amablemente que se manejan por **cotización directa y personalizada** según las funciones que necesite el cliente, y activa la derivación a soporte para que hablen por WhatsApp.
 
-4. PROPIEDAD DEL PROYECTO Y MANTENIMIENTO:
-   - Si el cliente opta por no renovar el mantenimiento mensual, todo el código, diseño y recursos desarrollados pasan a ser de su propiedad exclusiva, entregándose los archivos íntegros.
-   - El soporte mensual cubre hasta 4 horas para cambios cotidianos; módulos complejos adicionales se presupuestan por separado.
+CONDICIONES CLAVE Y PROPIEDAD:
+- **Fecha de pago:** Se acuerda una fecha fija de pago de cada mes.
+- **Propiedad del código:** Concluidos los 6 meses mínimos, si el cliente opta por no renovar el mantenimiento mensual, TODO el código, diseño y recursos desarrollados pasan a ser de su propiedad exclusiva, entregándosele los archivos íntegros.
+- **Gastos externos:** El dominio web (.com) cuesta aprox. $50.000 - $80.000 COP (10€ - 20€) al año y siempre queda registrado a nombre del cliente.
 
-5. PRECIOS Y COTIZACIONES:
-   - En la página web nos guiamos por transparencia: cotizaciones rápidas y cerradas en menos de 2 horas sin sorpresas ni sobrecostos según el alcance que necesite el cliente.
+EXPLICAR TÉRMINOS TÉCNICOS FÁCIL:
+- Si preguntan qué es hosting, dominio, SSL, responsive, etc., explícalo con metáforas cotidianas sencillas (dominio = placa de tu local, hosting = el terreno donde está construido).
 
-6. ACLARAR DUDAS TÉCNICAS CON SENCILLEZ:
-   - Si el cliente pregunta qué es un dominio, hosting, SSL, responsive, SEO, Next.js, etc., explícaselo con analogías sencillas de la vida diaria (por ejemplo: el dominio es como la placa de dirección de tu local, el hosting es el terreno donde está construido).
-
-7. RECOMENDACIÓN DE PROYECTOS:
-   - Invita a explorar el visor de proyectos en vivo de VisionWeb (Sofia Cruz UGC, Tricom Link, etc.).
-
-8. DERIVACIÓN A SOPORTE HUMANO (FALLBACK):
-   - Si la consulta requiere una cotización a medida detallada, contratos formales, soporte técnico urgente o si el cliente pide hablar con una persona:
-   - Responde de forma cordial y marca "needsHumanSupport": true.
-   - Redacta un "whatsappMessage" corto y profesional que resuma la consulta para que el cliente solo tenga que hacer clic y enviarlo.
-   - Nuestro número de soporte por WhatsApp es +57 305 231 1490.
+DERIVACIÓN A WHATSAPP:
+- Si el cliente pregunta por Portafolios UGC, Linktree, sistemas ERP, cotizaciones a medida o pide hablar con un asesor:
+  - Marca "needsHumanSupport": true.
+  - Redacta "whatsappMessage" pre-llenado con la consulta.
+  - Nuestro WhatsApp de soporte es +57 305 231 1490.
 
 FORMATO DE RESPUESTA OBLIGATORIO:
-Debes responder SIEMPRE en formato JSON válido con la siguiente estructura:
+Debes responder SIEMPRE en formato JSON válido:
 {
-  "reply": "Tu respuesta al cliente con formato markdown amigable (listas, negritas, saltos de línea)",
+  "reply": "Tu respuesta al cliente con formato limpio (sin '###')",
   "needsHumanSupport": true o false,
   "supportReason": "Breve motivo si requiere soporte humano, o null",
   "whatsappMessage": "Texto pre-llenado para WhatsApp si needsHumanSupport es true, o null"
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           reply:
-            "El servicio de inteligencia artificial está temporalmente en configuración. Puedes contactar directamente a nuestro equipo por WhatsApp al +57 305 231 1490.",
+            "El servicio de asistencia virtual está temporalmente en configuración. Puedes contactar directamente a nuestro equipo por WhatsApp al +57 305 231 1490.",
           needsHumanSupport: true,
           whatsappMessage: "Hola VisionWeb, me gustaría recibir asesoría sobre sus servicios de páginas web.",
         },
@@ -91,20 +91,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    // Obtener la última pregunta del usuario
     const lastUserMsg = [...messages].reverse().find((m) => m.role === "user")?.content || "";
-
-    // Recuperar contexto relevante RAG
     const ragContext = retrieveRelevantContext(lastUserMsg);
 
-    // Preparar el historial de mensajes para Gemini API
-    // Gemini usa { role: "user" | "model", parts: [{ text: string }] }
     const contents: Array<{ role: "user" | "model"; parts: Array<{ text: string }> }> = [];
+    const enrichedSystemInstruction = `${SYSTEM_PROMPT}\n\n=== INFORMACIÓN OFICIAL DE VISIONWEB ===\n${ragContext}`;
 
-    // Agregar el contexto RAG enriquecido al inicio de la conversación
-    const enrichedSystemInstruction = `${SYSTEM_PROMPT}\n\n=== BASE DE CONOCIMIENTO RAG RELEVANTE ===\n${ragContext}`;
-
-    // Limitar el historial a los últimos 6 mensajes para rapidez y precisión
     const recentMessages = messages.slice(-6);
 
     for (const msg of recentMessages) {
@@ -115,14 +107,11 @@ export async function POST(req: Request) {
       });
     }
 
-    let lastError = null;
     let geminiResponseJson = null;
 
-    // Intentar con los modelos disponibles hasta que uno responda con éxito
     for (const model of CANDIDATE_MODELS) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-        
         const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -132,7 +121,7 @@ export async function POST(req: Request) {
             },
             contents,
             generationConfig: {
-              temperature: 0.6,
+              temperature: 0.5,
               topP: 0.95,
               responseMimeType: "application/json",
             },
@@ -140,13 +129,10 @@ export async function POST(req: Request) {
         });
 
         if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          lastError = errData;
-          // Si el modelo da 404 o deprecado, continuar con el siguiente
           continue;
         }
 
-        const data = await response.json();
+        const data: any = await response.json();
         const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (rawText) {
@@ -154,14 +140,13 @@ export async function POST(req: Request) {
             geminiResponseJson = JSON.parse(rawText);
             break;
           } catch {
-            // Si viene con backticks ```json ... ```
             const cleanText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
             geminiResponseJson = JSON.parse(cleanText);
             break;
           }
         }
-      } catch (err: any) {
-        lastError = err?.message || err;
+      } catch {
+        // Continue to next candidate
       }
     }
 
@@ -176,10 +161,9 @@ export async function POST(req: Request) {
       });
     }
 
-    // Fallback amigable si la API no pudo responder en JSON
     return NextResponse.json({
       reply:
-        "¡Hola! Con gusto te ayudo. En VisionWeb creamos páginas web de ventas, sitios corporativos y tiendas online 100% de tu propiedad, listas en pocos días y sin mensualidades forzadas. Si deseas una cotización personalizada o hablar con nuestro equipo, podemos conectarte directamente con nuestro asesor.",
+        "¡Hola! Con gusto te oriento. En VisionWeb creamos páginas web de ventas ($150.000 COP/mes), sitios corporativos ($200.000 COP/mes) y tiendas online ($270.000 COP/mes) con contrato mínimo de 6 meses y soporte mensual incluido. Para portafolios UGC, Linktree o sistemas ERP te damos cotización personalizada.",
       needsHumanSupport: true,
       whatsappMessage: `Hola VisionWeb, me gustaría recibir asesoría sobre: ${lastUserMsg.slice(0, 80)}`,
     });

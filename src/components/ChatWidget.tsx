@@ -141,17 +141,23 @@ export default function ChatWidget() {
     ]);
   };
 
-  // Formateador simple de markdown para negritas, listas y saltos
+  // Formateador de texto y markdown limpio (sin almohadillas ### ni símbolos feos)
   const renderFormattedContent = (content: string) => {
-    const paragraphs = content.split("\n\n");
+    // Limpiar cualquier residuo de ### o ## que pueda venir en el texto
+    const cleanedContent = content.replace(/^#{1,4}\s*/gm, "");
+    const paragraphs = cleanedContent.split("\n\n");
+
     return paragraphs.map((para, i) => {
       const lines = para.split("\n");
       return (
         <div key={i} className="space-y-1 mb-2 last:mb-0">
           {lines.map((line, j) => {
-            let formattedLine = line;
-            const isBullet = line.trim().startsWith("•") || line.trim().startsWith("-");
-            const cleanLine = isBullet ? line.replace(/^[•\-]\s*/, "") : line;
+            const trimmed = line.trim();
+            if (!trimmed) return null;
+
+            // Detectar viñetas
+            const isBullet = trimmed.startsWith("•") || trimmed.startsWith("-") || (trimmed.startsWith("*") && !trimmed.startsWith("**"));
+            const cleanLine = isBullet ? trimmed.replace(/^[•\-*]\s*/, "") : trimmed;
 
             // Procesar negritas con **
             const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
@@ -160,7 +166,9 @@ export default function ChatWidget() {
               <p
                 key={j}
                 className={`text-xs sm:text-[13px] leading-relaxed ${
-                  isBullet ? "pl-3 relative before:content-['•'] before:absolute before:left-0 before:text-[#D5DD54] font-medium" : ""
+                  isBullet
+                    ? "pl-3.5 relative before:content-['•'] before:absolute before:left-0 before:text-[#141534] font-medium"
+                    : ""
                 }`}
               >
                 {parts.map((part, pIdx) => {
