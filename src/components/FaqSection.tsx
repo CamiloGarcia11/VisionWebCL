@@ -32,44 +32,44 @@ export default function FaqSection() {
       <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         {/* Section Header */}
         <div className="text-center mb-6 sm:mb-10 md:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#141534]/5 border border-[#141534]/15 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-2 sm:mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-[#141534]/12 text-[#141534] font-mono text-[11px] sm:text-xs tracking-wider uppercase mb-3 shadow-[0_1px_3px_rgba(20,21,52,0.03)]">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>Preguntas Frecuentes</span>
           </div>
 
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-black text-[#141534] tracking-tight mb-2">
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black text-[#141534] tracking-tight mb-3">
             Resolvemos tus dudas.
           </h2>
 
-          <p className="text-xs sm:text-base text-[#585A74]">
+          <p className="text-sm sm:text-base text-[#585A74] max-w-xl mx-auto font-normal leading-relaxed">
             Todo claro desde el primer día sobre tiempos, cobros y propiedad del código.
           </p>
         </div>
 
         {/* Accordion List */}
-        <div className="space-y-3">
+        <div className="space-y-3.5">
           {FAQS.map((faq, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl bg-white border border-[#141534]/15 overflow-hidden transition-all"
+                className="editorial-card rounded-2xl overflow-hidden"
               >
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-3 cursor-pointer focus:outline-none"
+                  className="w-full p-4.5 sm:p-5 text-left flex items-center justify-between gap-3.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141534] focus-visible:ring-offset-2 ring-offset-[#F4F2EB] transition-colors"
                 >
-                  <span className="font-heading font-black text-sm sm:text-base text-[#141534]">
+                  <span className="font-heading font-black text-sm sm:text-base text-[#141534] tracking-tight">
                     {faq.question}
                   </span>
-                  <div className="w-7 h-7 rounded-lg bg-[#F4F2EB] flex items-center justify-center shrink-0 text-[#141534]">
+                  <div className="w-8 h-8 rounded-xl bg-[#FAF8F2] border border-[#141534]/10 flex items-center justify-center shrink-0 text-[#141534] transition-transform duration-200">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </div>
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-[#585A74] leading-relaxed border-t border-[#141534]/10 pt-3 font-medium">
+                  <div className="px-4.5 sm:px-5 pb-5 text-xs sm:text-sm text-[#585A74] leading-relaxed border-t border-[#141534]/8 pt-3.5 font-normal">
                     {faq.answer}
                   </div>
                 )}

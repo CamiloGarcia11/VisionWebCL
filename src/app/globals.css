@@ -111,38 +111,53 @@ body {
 /* Clean editorial cards */
 .editorial-card {
   background: #FFFFFF;
-  border: 1px solid rgba(20, 21, 52, 0.1);
-  box-shadow: 0 4px 20px -2px rgba(20, 21, 52, 0.05);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(20, 21, 52, 0.08);
+  box-shadow: 
+    0 1px 2px -1px rgba(20, 21, 52, 0.04),
+    0 8px 24px -4px rgba(20, 21, 52, 0.06);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .editorial-card:hover {
-  border-color: rgba(20, 21, 52, 0.3);
-  box-shadow: 0 12px 30px -4px rgba(20, 21, 52, 0.08);
+  border-color: rgba(20, 21, 52, 0.22);
+  box-shadow: 
+    0 2px 4px -1px rgba(20, 21, 52, 0.06),
+    0 16px 36px -6px rgba(20, 21, 52, 0.09);
+  transform: translateY(-2px);
 }
 
-/* Button styles */
+/* Button styles with tactile micro-physics */
 .btn-ink {
   background-color: #141534;
   color: #FFFFFF;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-ink:hover {
   background-color: #21234F;
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px -2px rgba(20, 21, 52, 0.25);
+}
+
+.btn-ink:active {
+  transform: translateY(0) scale(0.985);
 }
 
 .btn-lime {
   background-color: #D5DD54;
   color: #141534;
   font-weight: 800;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-lime:hover {
   background-color: #C6CE43;
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px -2px rgba(213, 221, 84, 0.4);
+}
+
+.btn-lime:active {
+  transform: translateY(0) scale(0.985);
 }
 
 @keyframes fadeIn {

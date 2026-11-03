@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F4F2EB] text-[#141534] selection:bg-[#D5DD54] selection:text-[#141534]">
+    <main className="min-h-[100svh] bg-[#F4F2EB] text-[#141534] selection:bg-[#D5DD54] selection:text-[#141534] flex flex-col relative overflow-x-clip">
       {/* Floating Modern Navbar */}
       <Navbar onOpenContactModal={handleOpenContactModal} />
 

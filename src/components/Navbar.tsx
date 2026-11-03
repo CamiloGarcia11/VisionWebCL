@@ -67,10 +67,10 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out ${
         isScrolled
-          ? "bg-[#F4F2EB]/90 backdrop-blur-xl border-b border-[#141534]/10 py-3 shadow-md shadow-[#141534]/5"
-          : "bg-transparent py-5"
+          ? "bg-[#F4F2EB]/85 backdrop-blur-md border-b border-[#141534]/8 py-3 shadow-[0_4px_20px_-4px_rgba(20,21,52,0.06)]"
+          : "bg-transparent py-5 lg:py-6 border-b border-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,9 +78,9 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
           {/* Logo & Brand Identity */}
           <a
             href="#"
-            className="flex items-center gap-2.5 group focus:outline-none rounded-lg p-1"
+            className="flex items-center gap-2.5 group rounded-xl p-1 -m-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141534] focus-visible:ring-offset-2 ring-offset-[#F4F2EB] transition-all"
           >
-            <div className="w-9 h-9 rounded-xl bg-[#141534] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 rounded-xl bg-[#141534] flex items-center justify-center shadow-[0_2px_8px_-2px_rgba(20,21,52,0.25)] border border-white/10 group-hover:scale-[1.03] active:scale-[0.98] transition-transform duration-200">
               <span className="font-heading font-black text-sm tracking-tight text-white">
                 V<span className="text-[#D5DD54]">W</span>
               </span>
@@ -89,9 +89,9 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-heading font-black text-lg tracking-tight text-[#141534]">
-                  Vision<span className="text-[#141534]/80">Web</span>
+                  Vision<span className="text-[#141534]/75">Web</span>
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#D5DD54]/30 text-[#141534] border border-[#D5DD54]">
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-[#D5DD54]/30 text-[#141534] border border-[#D5DD54]/80">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#141534] animate-pulse"></span>
                   Disponible
                 </span>
@@ -105,7 +105,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
               items={navItems}
               value={activeSection}
               onChange={handleNavChange}
-              trackColor="rgba(255, 255, 255, 0.9)"
+              trackColor="rgba(255, 255, 255, 0.85)"
               thumbColor="#141534"
               textColor="#585A74"
               activeTextColor="#FFFFFF"
@@ -115,7 +115,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
               stretch={120}
               squash={4}
               equalSlots={true}
-              className="border border-[#141534]/15 shadow-sm backdrop-blur-md"
+              className="border border-[#141534]/12 shadow-[0_2px_8px_-2px_rgba(20,21,52,0.05)] backdrop-blur-md"
             />
           </nav>
 
@@ -129,10 +129,10 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
                   onOpenContactModal();
                 }
               }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold bg-[#141534] hover:bg-[#222452] text-white shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+              className="group inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-xs font-bold tracking-tight bg-[#141534] hover:bg-[#20224A] text-white shadow-[0_2px_8px_-1px_rgba(20,21,52,0.2)] hover:shadow-[0_6px_16px_-2px_rgba(20,21,52,0.25)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141534] focus-visible:ring-offset-2 ring-offset-[#F4F2EB] transition-all duration-200 cursor-pointer"
             >
               <span>Iniciar Proyecto</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#D5DD54]" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#D5DD54] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
             </a>
           </div>
 
@@ -140,7 +140,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
           <div className="flex lg:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-white text-[#141534] border border-[#141534]/10 shadow-sm cursor-pointer"
+              className="p-2.5 rounded-xl bg-white text-[#141534] border border-[#141534]/12 shadow-sm hover:bg-[#FAF8F2] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141534] transition-all cursor-pointer"
               aria-label="Abrir menú"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -151,7 +151,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
 
       {/* Mobile & Tablet Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#F4F2EB]/95 backdrop-blur-xl border-b border-[#141534]/10 px-6 py-5 space-y-3 shadow-xl">
+        <div className="lg:hidden bg-[#FAF8F2]/95 backdrop-blur-2xl border-b border-[#141534]/10 px-5 py-5 space-y-3 shadow-[0_20px_35px_-10px_rgba(20,21,52,0.12)] animate-fade-in">
           <div className="flex flex-col space-y-1">
             {navItems.map((item) => {
               const isActive = activeSection === item.value;
@@ -162,10 +162,10 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
                     handleNavChange(item.value);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-semibold tracking-tight transition-all duration-150 ${
                     isActive
-                      ? "bg-[#141534] text-white shadow-sm"
-                      : "text-[#141534] hover:bg-[#141534]/5"
+                      ? "bg-[#141534] text-white shadow-sm font-bold"
+                      : "text-[#141534]/80 hover:text-[#141534] hover:bg-[#141534]/6"
                   }`}
                 >
                   {item.label}
@@ -181,7 +181,7 @@ export default function Navbar({ onOpenContactModal }: NavbarProps) {
                 setMobileMenuOpen(false);
                 if (onOpenContactModal) onOpenContactModal();
               }}
-              className="w-full py-3 rounded-xl text-xs font-black bg-[#141534] text-white flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl text-xs font-bold tracking-tight bg-[#141534] hover:bg-[#20224A] text-white flex items-center justify-center gap-2 shadow-md active:scale-[0.98] transition-all"
             >
               <span>Cotizar Proyecto Inmediato</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#D5DD54]" />

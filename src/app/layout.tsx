@@ -107,7 +107,7 @@ export default function RootLayout({
       lang="es"
       className={`${spaceGrotesk.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} scroll-smooth`}
     >
-      <body className="min-h-screen bg-[#F4F2EB] text-[#141534] antialiased selection:bg-[#D5DD54] selection:text-[#141534]">
+      <body className="min-h-[100svh] bg-[#F4F2EB] text-[#141534] antialiased selection:bg-[#D5DD54] selection:text-[#141534]">
         {children}
       </body>
     </html>

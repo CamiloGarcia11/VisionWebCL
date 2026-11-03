@@ -14,7 +14,7 @@ import {
   Eye
 } from "lucide-react";
 import { PORTFOLIO_PROJECTS, PROJECT_CATEGORIES, Project } from "@/constants/projects";
-import { LavenderStar, SlateAsterisk, TechnicalCross } from "@/components/ui/BrandDeco";
+import { LavenderStar, SlateAsterisk } from "@/components/ui/BrandDeco";
 
 export default function ProjectViewer() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -98,10 +98,10 @@ export default function ProjectViewer() {
             <button
               key={cat.id}
               onClick={() => handleCategoryChange(cat.id)}
-              className={`px-4 py-2 rounded-xl text-xs font-black tracking-wide transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold tracking-tight transition-all duration-200 cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141534] focus-visible:ring-offset-2 ${
                 activeCategory === cat.id
-                  ? "bg-[#141534] text-white shadow-sm"
-                  : "bg-white text-[#141534] hover:bg-[#EBE8DF] border border-[#141534]/15"
+                  ? "bg-[#141534] text-white shadow-[0_2px_10px_-1px_rgba(20,21,52,0.25)]"
+                  : "bg-white/90 text-[#141534] hover:bg-[#FAF8F2] border border-[#141534]/12 shadow-[0_1px_3px_rgba(20,21,52,0.03)]"
               }`}
             >
               {cat.label}
@@ -113,11 +113,14 @@ export default function ProjectViewer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left: Project Selector Cards (4 Cols on Desktop, Horizontal Swipe on Mobile) */}
           <div className="lg:col-span-4 space-y-2 lg:space-y-2.5 order-2 lg:order-1">
-            <div className="flex items-center justify-between pb-1">
+            <div className="flex items-center justify-between pb-1 px-1">
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#585A74] font-bold">
                 Elige una página ({filteredProjects.length})
               </span>
-              <span className="text-[11px] font-mono text-[#141534] font-bold">● Funcionando</span>
+              <span className="text-[11px] font-mono text-[#141534] font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse"></span>
+                Funcionando
+              </span>
             </div>
 
             <div className="flex lg:flex-col overflow-x-auto lg:overflow-y-auto snap-x snap-mandatory gap-3 pb-3 pt-1 -mx-4 px-4 lg:mx-0 lg:px-0 lg:max-h-[580px] lg:space-y-2.5 lg:pr-3.5 lg:pl-1 lg:py-1.5 custom-scrollbar">
@@ -127,22 +130,22 @@ export default function ProjectViewer() {
                   <button
                     key={project.id}
                     onClick={() => handleSelectProject(project)}
-                    className={`w-[84vw] max-w-[320px] shrink-0 snap-center lg:w-full lg:max-w-none lg:shrink text-left p-3.5 rounded-xl border transition-all cursor-pointer ${
+                    className={`w-[84vw] max-w-[320px] shrink-0 snap-center lg:w-full lg:max-w-none lg:shrink text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
                       isSelected
-                        ? "bg-white border-2 border-[#141534] shadow-[4px_4px_0px_#141534]"
-                        : "bg-white/70 hover:bg-white border-[#141534]/15 text-[#585A74]"
+                        ? "bg-white border-2 border-[#141534] shadow-[0_8px_20px_-4px_rgba(20,21,52,0.12)] -translate-y-0.5"
+                        : "bg-white/80 hover:bg-white border-[#141534]/10 hover:border-[#141534]/25 hover:shadow-sm text-[#585A74]"
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <h3 className="font-heading font-black text-sm text-[#141534]">
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <h3 className="font-heading font-black text-sm text-[#141534] tracking-tight">
                         {project.title}
                       </h3>
-                      <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#141534]/5 text-[#141534] font-bold border border-[#141534]/10 shrink-0">
+                      <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#141534]/5 text-[#141534] font-bold border border-[#141534]/8 shrink-0">
                         {project.categoryLabel}
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#585A74] line-clamp-2 leading-relaxed mb-2 font-medium">
+                    <p className="text-xs text-[#585A74] line-clamp-2 leading-relaxed mb-3 font-normal">
                       {project.shortDescription}
                     </p>
 
@@ -150,7 +153,7 @@ export default function ProjectViewer() {
                       {project.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#F4F2EB] text-[#141534] border border-[#141534]/10 font-medium"
+                          className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#FAF8F2] text-[#141534] border border-[#141534]/8 font-medium"
                         >
                           {tech}
                         </span>
@@ -170,9 +173,9 @@ export default function ProjectViewer() {
             </div>
 
             {/* Direct Status (Desktop only) */}
-            <div className="hidden lg:flex p-3 rounded-xl bg-white border border-[#141534]/15 text-xs items-center justify-between">
+            <div className="hidden lg:flex p-3 rounded-xl bg-white border border-[#141534]/10 text-xs items-center justify-between shadow-[0_1px_3px_rgba(20,21,52,0.03)]">
               <span className="text-[#141534] font-bold">Página al aire y lista</span>
-              <span className="text-[10px] font-mono text-[#141534] bg-[#D5DD54] px-2 py-0.5 rounded font-black border border-[#141534]">
+              <span className="text-[10px] font-mono text-[#141534] bg-[#D5DD54] px-2 py-0.5 rounded font-black border border-[#141534]/80">
                 Al aire
               </span>
             </div>
@@ -242,7 +245,7 @@ export default function ProjectViewer() {
                     href={activeProject.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-black bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534]"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534] shadow-[0_2px_8px_rgba(213,221,84,0.3)] active:scale-95 transition-all"
                   >
                     <span>Visitar</span>
                     <ExternalLink className="w-3 h-3" />
@@ -288,10 +291,10 @@ export default function ProjectViewer() {
 
                   {/* Scroll trap prevention */}
                   {!isInteractive && !isLoading && (
-                    <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-end p-6 z-10">
+                    <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px] flex flex-col items-center justify-end p-6 z-10">
                       <button
                         onClick={() => setIsInteractive(true)}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534] border-2 border-[#141534] shadow-xl hover:scale-105 transition-all cursor-pointer"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-black uppercase tracking-wider bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534] border border-[#141534] shadow-[0_8px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
                       >
                         <MousePointerClick className="w-4 h-4 animate-bounce" />
                         <span>Toca aquí para navegar la página en vivo</span>
@@ -319,7 +322,7 @@ export default function ProjectViewer() {
 
       {/* Fullscreen Quick-View Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md p-4 sm:p-6 flex flex-col animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xl p-4 sm:p-6 flex flex-col animate-in fade-in duration-200">
           <div className="flex items-center justify-between px-4 py-3 bg-[#141534] rounded-t-2xl border border-white/10 shrink-0">
             <span className="font-heading font-black text-white">{activeProject.title}</span>
             <div className="flex items-center gap-2">
@@ -327,14 +330,14 @@ export default function ProjectViewer() {
                 href={activeProject.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-lg bg-[#D5DD54] text-[#141534] text-xs font-black flex items-center gap-1"
+                className="px-3 py-1.5 rounded-lg bg-[#D5DD54] hover:bg-[#C5CD43] text-[#141534] text-xs font-black flex items-center gap-1 transition-colors"
               >
                 <span>Abrir Web</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+                className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
               >
                 <Minimize2 className="w-4 h-4" />
               </button>

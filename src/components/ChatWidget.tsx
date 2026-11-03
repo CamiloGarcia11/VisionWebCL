@@ -272,10 +272,10 @@ export default function ChatWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Cerrar chat" : "Abrir chat de soporte con IA"}
-        className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl transition-all duration-300 transform active:scale-95 ${
+        className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-[0_12px_32px_-4px_rgba(20,21,52,0.45)] transition-all duration-300 transform active:scale-95 cursor-pointer ${
           isOpen
             ? "bg-[#141534] text-white rotate-90"
-            : "bg-[#141534] text-white hover:scale-105 hover:shadow-[#D5DD54]/20 border-2 border-[#D5DD54]/40"
+            : "bg-[#141534] text-white hover:scale-105 border-2 border-[#D5DD54]/50 hover:border-[#D5DD54]"
         }`}
       >
         {isOpen ? (
@@ -294,7 +294,7 @@ export default function ChatWidget() {
 
       {/* Ventana de Chat Modal */}
       {isOpen && (
-        <div className="fixed inset-x-3 bottom-22 sm:bottom-24 sm:right-6 sm:left-auto z-50 w-auto sm:w-[410px] h-[78vh] sm:h-[590px] max-h-[85vh] flex flex-col bg-[#FBFBFA] rounded-3xl shadow-2xl border border-[#141534]/15 overflow-hidden animate-fade-in">
+        <div className="fixed inset-x-3 bottom-22 sm:bottom-24 sm:right-6 sm:left-auto z-50 w-auto sm:w-[410px] h-[78vh] sm:h-[590px] max-h-[85vh] flex flex-col bg-[#FAF8F2] rounded-3xl shadow-[0_25px_60px_-15px_rgba(20,21,52,0.3)] border border-[#141534]/15 overflow-hidden animate-fade-in">
           {/* Header */}
           <div className="bg-[#141534] text-white px-4 py-3.5 flex items-center justify-between shrink-0 border-b border-white/10">
             <div className="flex items-center gap-3">
@@ -321,7 +321,7 @@ export default function ChatWidget() {
               <button
                 onClick={handleResetChat}
                 title="Reiniciar chat"
-                className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
                 aria-label="Reiniciar conversación"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -329,7 +329,7 @@ export default function ChatWidget() {
               <button
                 onClick={() => setIsOpen(false)}
                 title="Cerrar"
-                className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
                 aria-label="Cerrar chat"
               >
                 <ChevronDown className="w-5 h-5" />
@@ -428,8 +428,8 @@ export default function ChatWidget() {
 
           {/* Quick chips sugerencias */}
           {!isLoading && (
-            <div className="px-3 py-2 bg-white/70 border-t border-[#141534]/5">
-              <p className="text-[10px] font-mono uppercase text-[#585A74] tracking-wider mb-1.5 flex items-center gap-1">
+            <div className="px-3 py-2 bg-white/80 border-t border-[#141534]/5">
+              <p className="text-[10px] font-mono uppercase text-[#585A74] tracking-wider mb-1.5 flex items-center gap-1 font-bold">
                 <Sparkles className="w-3 h-3 text-[#141534]" /> Preguntas sugeridas:
               </p>
               <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
@@ -437,7 +437,7 @@ export default function ChatWidget() {
                   <button
                     key={idx}
                     onClick={() => handleSend(qp.query)}
-                    className="shrink-0 px-2.5 py-1 rounded-full bg-[#141534]/5 hover:bg-[#141534] hover:text-white border border-[#141534]/10 text-[#141534] text-[11px] font-medium transition-all active:scale-95 cursor-pointer"
+                    className="shrink-0 px-2.5 py-1 rounded-full bg-[#FAF8F2] hover:bg-[#141534] hover:text-white border border-[#141534]/10 text-[#141534] text-[11px] font-medium transition-all active:scale-95 cursor-pointer"
                   >
                     {qp.label}
                   </button>
@@ -462,13 +462,13 @@ export default function ChatWidget() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Escribe tu duda o pregunta sobre tu web..."
                 disabled={isLoading}
-                className="flex-1 bg-[#F4F2EB] border border-[#141534]/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#141534] placeholder:text-[#585A74]/70 focus:outline-none focus:ring-2 focus:ring-[#141534]/20 transition-all disabled:opacity-50"
+                className="flex-1 bg-[#FAF8F2] border border-[#141534]/15 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#141534] placeholder:text-[#585A74]/70 focus:outline-none focus:ring-2 focus:ring-[#141534]/15 focus:bg-white transition-all disabled:opacity-50"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
                 aria-label="Enviar mensaje"
-                className="w-10 h-10 rounded-xl bg-[#141534] hover:bg-[#1f2150] disabled:bg-[#141534]/20 text-[#D5DD54] disabled:text-[#141534]/40 flex items-center justify-center transition-all shrink-0 active:scale-95 cursor-pointer"
+                className="w-10 h-10 rounded-xl bg-[#141534] hover:bg-[#20224A] disabled:bg-[#141534]/20 text-[#D5DD54] disabled:text-[#141534]/40 flex items-center justify-center transition-all shrink-0 active:scale-95 cursor-pointer shadow-sm"
               >
                 <Send className="w-4 h-4" />
               </button>
